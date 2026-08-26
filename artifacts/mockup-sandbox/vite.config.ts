@@ -6,26 +6,20 @@ import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { mockupPreviewPlugin } from "./mockupPreviewPlugin";
 
 const rawPort = process.env.PORT;
-
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided.",
-  );
-}
-
 const port = Number(rawPort);
 
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
+// `vite build` does not start a server, so it does not need a port — only the
+// dev and preview servers do. Requiring PORT at build time breaks CI and
+// hosting providers that only set it at runtime.
+const isServing = process.argv.includes("serve") || process.argv.includes("preview") || process.argv.includes("dev");
 
-const basePath = process.env.BASE_PATH;
-
-if (!basePath) {
+if (isServing && (!rawPort || Number.isNaN(port) || port <= 0)) {
   throw new Error(
-    "BASE_PATH environment variable is required but was not provided.",
+    `PORT environment variable is required to serve the sandbox (got: "${rawPort ?? ""}").`,
   );
 }
+
+const basePath = process.env.BASE_PATH || "/";
 
 export default defineConfig({
   base: basePath,
@@ -56,7 +50,7 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    port,
+    port: port || 5174,
     host: "0.0.0.0",
     allowedHosts: true,
     fs: {
@@ -64,7 +58,7 @@ export default defineConfig({
     },
   },
   preview: {
-    port,
+    port: port || 4174,
     host: "0.0.0.0",
     allowedHosts: true,
   },
