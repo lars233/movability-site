@@ -1,0 +1,69 @@
+General feedback
+I like the v3 storytelling, but with white background. I will make it clear how in the sections below. 
+
+—-----LANDING PAGE—---
+
+Hero design
+
+Use font and text from v3 on the header. 
+The sub-text should be the old one - shown in v1. I also like the v1 enter your email and let’s discuss best.  
+I will have someone make a video to go behind the text based on free stock video showing different mobility modes.
+
+Add text: “Companies I’ve worked with:”
+Logo slider
+
+Sub-header: The Challenge
+Header: The transport market can feel like a guessing game.
+For City Officials
+You struggle to align fast-moving market offerings with long-term public goals. The technology moves faster than regulation, leaving you reactive instead of proactive in shaping your city's mobility future.
+
+For Transport Providers
+You find regulatory gatekeepers and complex bidding processes hard to decode. Entering a new market requires deep local insight, and a generic playbook rarely survives contact with reality.
+→ Use from v1. 
+
+Sub-header: What We Do
+Header: Six ways we close the gap 
+Use Public / Private sector overview from v1, but add 01, 02, etc. behind each point. 
+
+Sub-header: Evidence
+Header: Strategy that moves markets. 
+
+Then the boxes from v3
+Text: Read more of our case studies here. 
+Sub-header: What clients say
+Quotes, pictures and titles and names like in v3. 
+
+Sub-header: Insights
+Header: Latest Articles
+Sub-text: I regularly interview mobility leaders to obtain market and regulatory insights.
+Subscribe to my newsletter here: (box for subscription) 
+(ARTICLE SLIDER)
+
+Sub-header: My story
+Header: How Movability came to be 
+
+Founded by Lars Christian Grødem-Olsen, Movability is a boutique solopreneur consultancy built on real operational experience in new mobility.
+
+Before consulting, Lars co-founded a car-sharing startup and led TIER Norway. He knows what it takes to operate on the ground — then brought that perspective to the public sector, consulting Ruter on MaaS integrations and helping shape the revised 2024 Oslo e-scooter regulations.
+
+With 19+ clients advised globally, Movability offers the agility of a startup with the strategic rigor of a top-tier firm. For larger engagements, Lars partners with a trusted network of transport specialists.
+
+
+Other instructions: 
+Remove Case studies from landing page to remove some content. 
+
+
+Questions for Luqman
+Does the landing page become too long? 
+Is it better to have people scrolling or clicking? (I often find it satisfying to click to other pages where there is more content)
+I’m wondering if we should link to “Services” and “Our results”
+Ideas for how we can combine newsletter sign-up and contact in the hero? 
+Is there another creative way of showing Verticals we’ve worked with?
+
+An idea for a Services page outline
+What we do from v1, 
+How we work from v1
+Add - Contact us CTA
+Add text: “References: “
+Add slider for companies we’ve worked with
+→ What do you think? It might need some context and pictures? 

@@ -1,0 +1,69 @@
+# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# compiled output
+dist
+tmp
+out-tsc
+*.tsbuildinfo
+.expo
+.expo-shared
+
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+
+# Replit
+.cache/
+.local/
+
+# Local environment and runtime data (never commit these)
+.env
+.env.local
+/uploads
+/database.sqlite
+/database.sqlite-shm
+/database.sqlite-wal
+
+# Large source media kept locally only — the site uses the compressed
+# attached_assets/hero-video.mp4 instead (4 MB rather than 48 MB each).
+attached_assets/Hero_Video_*.mp4
+movability-site.zip
+
+# Session scratch
+_to_delete/
+_stage_*
+
+# Backup of the old (shallow, video-heavy) git history — local only
+.git-old-backup-*/

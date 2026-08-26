@@ -1,0 +1,25 @@
+uploads = []
+
+[[generated]]
+id = "KeXbqVPw4ZhkqOFTRK0C_"
+uri = "file://artifacts/movability-site/public/hero-bg.png"
+type = "image"
+title = "Abstract dark mobility hero background"
+
+[[generated]]
+id = "5AiCVvmLnGcgGfyxW1_jo"
+uri = "file://artifacts/movability-site/public/about-portrait.png"
+type = "image"
+title = "Professional abstract portrait placeholder"
+
+[[generated]]
+id = "QGiD6bLwpuLEGpWaq3vBX"
+uri = "file://artifacts/movability-site/public/report-cover.png"
+type = "image"
+title = "Report cover mockup"
+
+[[outputs]]
+id = "m58I5LY9Y-a-IDF0j2DGC"
+uri = "file://movability-site.zip"
+type = "unspecified"
+title = "Movability Site — V1, V2 & V3 (Fixed)"

@@ -1,0 +1,68 @@
+Final copy revision
+If it’s not covered here, then let’s keep the copy. 
+
+Hero
+Movability advises public sector and transport companies on growing new mobility. (remove last part of the sentence)
+
+The Challenge (revised text)
+For City Officials
+You may struggle to align market offerings with public goals. Technology and markets often move faster than regulation.
+
+For Transport Providers
+You may find regulations and bidding processes hard to decode. Entering a new market requires local insight, and a generic playbook rarely survives contact with reality.
+
+Slider: Add “Mobility Regulation Software”
+
+Put “Sectors we’ve worked across” under the “Six ways we close this gap” section. 
+
+Sub-header: About Movability 
+Movability’s story
+Movability is a transport solopreneur consultancy centered around its founder Lars Christian Grødem-Olsen. After co-founding a car-sharing startup and leading TIER’s Norway market, he went on to consult the PTA Ruter on its MaaS integrations and the revised 2024 Oslo escooter regulations. Since then he has advised over 20 clients on market entries, tenders, regulations, and integrations across various mobility modes. 
+Where clients need more capacity or a diverse competence-base Movability partners with several transport specialists and boutique consultancies. 
+Change to: “Our expert partners”
+(Remove “We collaborate with experts tailored to your project needs.”)
+Under Strategy that moves markets.:
+Regulation
+Revising Oslo’s e-scooter regulations and creating increased connectivity
+2X 
+Ridership increase
+
+Market Entry
+Helped sign B2G ride-hail contract
+€6M
+Contract value
+
+Procurement
+MaaS integrations secured for Ruter, Norway’s largest PTA
+5 
+Contracts won
+
+Let’s close the gap together. 
+Whether you're entering a new market, designing a procurement process, or need a strategic partner who speaks both mobility languages, let’s kick off the conversation.
+
+Case Studies (page)
+Sub-title: CASE STUDIES
+Title: How we’ve closed the gap before
+Previous Movability projects showcasing our impact. 
+Reports (Page)
+Title: Actionable Mobility Intelligence
+Deep-dive research on procurement strategy, regulatory evolutions and new mobility, with unique behind the scenes operational and market data. 
+
+Micromobility Regulations Best-Practices
+Our analysis of market and operational effects of various regulations across the globe helped shape the new e-scooter regulations in Oslo. This report summarizes the research that helped guide the regulation process.
+
+Articles (Page)
+Sub-title: Articles
+Title: Mobility Expert Interviews
+In-depth chats with operators, regulators and officials to help you understand how transport is evolving. 
+
+Contact
+Sub-title: Get in touch
+Title: Let’s close the gap together
+Whether you're entering a new market, designing a procurement process, or need a strategic partner, let's talk about your challenge and how Movability can help.
+
+Please remove - Industry
+Primary objective - please add “Other”
+
+
+

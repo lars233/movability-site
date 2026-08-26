@@ -1,0 +1,57 @@
+Since you're planning to hand this off to a client, **SQLite** is your best bet.
+
+It’s essentially a single file that lives inside your project folder. When you’re ready to export, you just zip up the whole directory (including the `.db` file), and the client can run it on almost any hosting provider without needing to set up a complex database server. It’s the "portable" choice that keeps things professional but simple.
+
+Here is the updated prompt for the Replit agent, specifically optimized for **portability and SQLite**:
+
+---
+
+### The "Client-Ready" CMS Prompt
+
+**Role:** Full-Stack Developer. Build a CMS management side for my landing page.
+
+**1. Database Strategy (Portability Focus)**
+
+* Use **SQLite** for data storage.
+* Create a `database.sqlite` file in the root directory.
+* Ensure the schema includes two tables: `blog` and `articles`.
+* **Important:** This needs to be portable, so all paths should be relative to the project root.
+
+**2. Authentication**
+
+* Create a `/admin/login` route.
+* Implement a simple but secure username/password authentication.
+* Use a middleware to protect all `/admin/*` routes. If not logged in, redirect to the login page.
+
+**3. Content Management (Blog & Articles)**
+
+* Create a dashboard with two main sections: **Blog** and **Articles**.
+* Each section must display a list of entries sorted by **latest date**.
+* Implement full **CRUD** (Create, Read, Update, Delete) functionality for both sections.
+* Each entry requires the following fields:
+* `Name`: Title of the post.
+* `Status`: Toggle or Dropdown for "Published" vs "Draft".
+* `Slug`: A URL-friendly version of the Name (auto-generate this while typing the name).
+* `Date`: Editable date field (default to today).
+* `Categories`: A field to add small text labels/tags.
+* `Content`: Integrate a **Rich Text Editor** (like Tiptap, Pell, or Quill) so I can paste and format text/images easily.
+
+
+
+**4. UI/UX**
+
+* The Admin UI should be distinct from the landing page—clean, functional, and "dashboard" style.
+* Use a sidebar for navigation between "Blog" and "Articles".
+* Ensure "Success" and "Error" toasts appear when saving or deleting content.
+
+---
+
+### Why this works for "Vibe Coding":
+
+* **The Rich Text Editor:** By explicitly naming libraries like *Tiptap* or *Quill*, you prevent the agent from just giving you a boring `<textarea>`.
+* **The Slug Logic:** Asking for "auto-generation" makes the CMS feel high-end for the client.
+* **SQLite:** It ensures that when you click "Download" on Replit, the entire database comes with the code.
+
+**Quick tip:** If you want to give the client an even "fancier" experience without hosting a database, you could ask the agent to use **Airtable** as the CMS, but SQLite is much faster and keeps everything under one roof.
+
+How are you planning to handle the image uploads within that content—hosting them locally in a folder or using an external service?

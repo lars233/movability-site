@@ -1,0 +1,76 @@
+```python
+import os
+files = os.listdir('.')
+print(f"Files in directory: {files}")
+
+
+
+```
+
+```text
+Files in directory: []
+
+
+```
+
+```python
+import os
+try:
+    files = os.listdir('/mnt/data')
+    print(f"Files in /mnt/data: {files}")
+except Exception as e:
+    print(e)
+
+
+```
+
+```text
+Files in /mnt/data: []
+
+
+```
+
+This is a perfect follow-up to transition from a basic CMS to a production-ready tool. This prompt focuses on handling binary files (uploads) alongside existing data migration.
+
+Copy and paste this follow-up prompt into your Replit agent:
+
+---
+
+### Follow-up Prompt: Image Handling & CSV Data Migration
+
+**Task 1: Advanced Image Management**
+
+* **Image Field:** Add a dedicated "Feature Image" field to both the Blog and Articles CMS sections.
+* **Dual-Input Logic:** Provide the admin with two options for the image:
+1. **Upload File:** If a file is uploaded, store it locally in a `/public/uploads` directory. Ensure the database stores the local path.
+2. **Image URL:** Alternatively, allow the admin to paste a direct image link/URL. The database should store this string.
+
+
+* **CRUD Integration:** The image (whether local or URL) must be visible in the list view and the editor. Admins must be able to update or remove the image just like other fields.
+* **Display Logic:** Ensure the front-end components are updated to render either the local path or the external URL correctly.
+
+**Task 2: Initial Data Import from CSV**
+
+* **Source Files:** Locate the attached `blog.csv` and `articles.csv` in the project directory.
+* **Import Script:** Create a one-time migration script (or a button in the Admin dashboard) to read these CSV files and populate the SQLite database.
+* **Data Mapping:** * Map the relevant columns to our schema (Name, Status, Slug, Date, Categories, Content).
+* **Ignore** any extra columns present in the CSVs that don't match our schema.
+* **Image Handling:** The CSVs contain image URLs. Ensure these are imported correctly into the image field so they display on the site immediately.
+
+
+* **Integrity:** Ensure the import doesn't create duplicates if run more than once (check by Slug or Name).
+
+**General Requirements:**
+
+* **Design:** All new UI elements (upload buttons, URL inputs, import status) must strictly follow the existing **site design aesthetic**.
+* **Storage:** Ensure the SQLite database and the `/public/uploads` folder are handled as persistent storage so data is not lost.
+
+---
+
+### Why this prompt works for your export:
+
+1. **Local Storage:** By storing images in a `/public/uploads` folder, the client gets everything in one folder. They don't need to pay for an external image host (like Cloudinary or AWS S3).
+2. **Hybrid Images:** It gives you the best of both worlds—you can use the high-quality URLs from your old data (the CSVs) while giving the client the ability to upload their own new photos easily.
+3. **CSV Automation:** Vibe coding is great at "Cleanup tasks." Telling it to "Ignore extra columns" prevents the agent from getting stuck or throwing errors if the CSV has messy data from a previous export.
+
+**Note for Replit:** Once you paste this, make sure you actually upload your two CSV files to the Replit file tree so the agent can "see" them and begin the import!
