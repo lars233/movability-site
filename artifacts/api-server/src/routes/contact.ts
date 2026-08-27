@@ -1,5 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { getDb } from "../lib/cms-db";
+import { notifyNewSubmission } from "../lib/notify";
 
 const router = Router();
 
@@ -31,7 +32,19 @@ router.post("/contact", (req: Request, res: Response): void => {
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(name, email, company, country, industry, primary_objective, project_overview);
 
+    // Answer the visitor immediately; the email goes out in the background so
+    // a slow or failing mail provider can never break the form.
     res.status(201).json({ ok: true, id: result.lastInsertRowid });
+
+    void notifyNewSubmission({
+      name,
+      email,
+      company,
+      country,
+      industry,
+      primary_objective,
+      project_overview,
+    });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     res.status(500).json({ error: msg });

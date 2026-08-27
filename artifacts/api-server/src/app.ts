@@ -6,8 +6,9 @@ import router from "./routes";
 import { logger } from "./lib/logger";
 import { STATIC_DIR, UPLOADS_DIR } from "./lib/config";
 import { revokeSessionsIfCredentialChanged } from "./lib/auth";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { metaForPath, renderMetaTags, robotsTxt, sitemapXml } from "./lib/seo";
 
 // Strict by default — see the note in lib/auth.ts.
 const IS_PRODUCTION = process.env["NODE_ENV"] !== "development";
@@ -113,6 +114,17 @@ app.use("/api", router);
 const indexHtml = path.join(STATIC_DIR, "index.html");
 
 if (existsSync(indexHtml)) {
+  const shell = readFileSync(indexHtml, "utf8");
+
+  /* ── crawler-facing files ───────────────────────────────────────────── */
+  app.get("/robots.txt", (_req: Request, res: Response) => {
+    res.type("text/plain").send(robotsTxt());
+  });
+
+  app.get("/sitemap.xml", (_req: Request, res: Response) => {
+    res.type("application/xml").set("Cache-Control", "public, max-age=3600").send(sitemapXml());
+  });
+
   app.use(
     express.static(STATIC_DIR, {
       index: false,
@@ -129,10 +141,20 @@ if (existsSync(indexHtml)) {
     }),
   );
 
-  // Client-side routing: any non-API GET falls back to the app shell.
+  /* ── the app shell, with per-page metadata written in ───────────────── */
   app.get(/^\/(?!api\/).*/, (req: Request, res: Response, next: NextFunction) => {
     if (req.method !== "GET") return next();
-    res.sendFile(indexHtml);
+    try {
+      const meta = metaForPath(req.path);
+      const html = shell.replace(
+        /<!--seo-->[\s\S]*?<!--\/seo-->/,
+        `<!--seo-->\n    ${renderMetaTags(meta)}\n    <!--/seo-->`,
+      );
+      res.type("html").set("Cache-Control", "no-cache").send(html);
+    } catch (err) {
+      logger.error({ err, path: req.path }, "Could not build page metadata");
+      res.sendFile(indexHtml);
+    }
   });
 } else {
   logger.warn(
