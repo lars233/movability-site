@@ -126,6 +126,7 @@ export default function HomeFinal() {
   const publicSector = content.items("services_public");
   const teamMembers = content.items("team");
   const caseStudies = content.items("case_tiles");
+  const proofPoints = content.items("proof_points");
   const testimonials = content.items("testimonials");
   const footerLinks = content.items("footer_links");
 
@@ -558,6 +559,27 @@ export default function HomeFinal() {
               {evidence.title} <span style={{ color: BLUE }}>{evidence.titleAccent}</span>
             </h2>
           </Reveal>
+          {proofPoints.length > 0 && (
+            <Reveal>
+              <div className="grid grid-cols-2 md:grid-cols-5 border-t border-b border-black/[0.10] mb-12">
+                {proofPoints.map((p, i) => (
+                  <div
+                    key={i}
+                    className={`flex flex-col gap-2.5 py-6 pr-6 border-black/[0.09] md:pl-6 md:border-l ${
+                      i % 2 === 0 ? "pl-0" : "pl-6 border-l"
+                    } ${i > 1 ? "border-t md:border-t-0" : ""} md:first:pl-0 md:first:border-l-0`}
+                  >
+                    <div className="text-[30px] leading-none font-bold tabular-nums" style={{ color: BLUE }}>
+                      {p.stat}
+                    </div>
+                    <div className="text-[12.5px] leading-[1.45] text-black/45 max-w-[19ch]">
+                      {p.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          )}
           <div className="grid md:grid-cols-3 gap-5 mb-8">
             {caseStudies.map((c, i) => (
               <Reveal key={i} delay={i * 0.1} className="h-full">

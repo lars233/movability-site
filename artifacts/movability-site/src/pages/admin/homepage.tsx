@@ -131,6 +131,10 @@ const COLLECTION_FIELDS: Record<CollectionKey, Field[]> = {
     { key: "stat", label: "Headline number" },
     { key: "statLabel", label: "Number caption" },
   ],
+  proof_points: [
+    { key: "stat", label: "Number", hint: "e.g. 30+, 15m+, 8yrs+" },
+    { key: "label", label: "Caption" },
+  ],
   testimonials: [
     { key: "name", label: "Name" },
     { key: "role", label: "Role" },
@@ -149,6 +153,7 @@ const COLLECTION_LABELS: Record<CollectionKey, string> = {
   services_public: "Public sector services",
   team: "Team members",
   case_tiles: "Case study tiles",
+  proof_points: "Proof points",
   testimonials: "References",
 };
 
@@ -163,7 +168,7 @@ const PANELS: Panel[] = [
   { id: "verticals", label: "Sectors", collections: ["verticals"] },
   { id: "story", label: "Story", collections: [] },
   { id: "team", label: "Team", collections: ["team"] },
-  { id: "evidence", label: "Evidence", collections: ["case_tiles"] },
+  { id: "evidence", label: "Evidence", collections: ["proof_points", "case_tiles"] },
   { id: "testimonials", label: "References", collections: ["testimonials"] },
   { id: "reports", label: "Reports", collections: [] },
   { id: "insights", label: "Articles", collections: [] },

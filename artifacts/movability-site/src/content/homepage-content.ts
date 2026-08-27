@@ -268,6 +268,16 @@ export const DEFAULT_ITEMS = {
       statLabel: "Contracts won",
     },
   ],
+  proof_points: [
+    { stat: "30+", label: "market entries" },
+    {
+      stat: "50+",
+      label: "shared mobility strategy projects for public and private sector",
+    },
+    { stat: "20+", label: "clients supported" },
+    { stat: "15m+", label: "trips analyzed" },
+    { stat: "8yrs+", label: "mobility experience" },
+  ],
   testimonials: [
     {
       name: "Antoine Belaieff",

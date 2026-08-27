@@ -13,6 +13,7 @@ const COLLECTIONS = [
   "services_public",
   "team",
   "case_tiles",
+  "proof_points",
   "testimonials",
   "footer_links",
 ] as const;
