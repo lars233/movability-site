@@ -33,12 +33,12 @@ function ReportCard({ report, index }: { report: PublicReport; index: number }) 
   const card = (
     <div className="group grid md:grid-cols-[1.4fr_1fr] border border-black/[0.10] hover:border-black/25 transition-all duration-400 overflow-hidden md:max-w-[85%]">
       {/* cover image — full bleed */}
-      <div className="relative bg-[#0d1220] aspect-video md:aspect-auto md:min-h-[306px] overflow-hidden">
+      <div className="relative bg-black aspect-video md:aspect-auto md:min-h-[306px] overflow-hidden">
         {report.image ? (
           <img
             src={report.image}
             alt={report.title}
-            className="absolute inset-0 w-full h-full object-contain p-5 group-hover:scale-[1.02] transition-transform duration-500"
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
           />
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3"
