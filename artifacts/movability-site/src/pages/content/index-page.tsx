@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Search, X } from "lucide-react";
-import { publicApi, type PublicItem, type ListResponse } from "@/lib/public-api";
+import { publicApi, toAbsoluteUrl, type PublicItem, type ListResponse } from "@/lib/public-api";
 import { formatCategoryLabel } from "@/lib/category-format";
 import SiteNav from "@/components/site-nav";
 import SiteFooter from "@/components/site-footer";
@@ -61,7 +61,7 @@ function ContentRow({ item, basePath, index }: { item: PublicItem; basePath: str
   const [imgErr, setImgErr] = useState(false);
   const cats = parseCats(item.categories).slice(0, 2);
   // Pieces published elsewhere open on that site instead of a detail page.
-  const external = (item.external_url ?? "").trim();
+  const external = toAbsoluteUrl(item.external_url);
   const host = external ? external.replace(/^https?:\/\//, "").split("/")[0].replace(/^www\./, "") : "";
   // Alternate which side the image sits on, so a long list keeps a rhythm
   // instead of reading as one repeated block.

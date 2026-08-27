@@ -1,5 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { getDb } from "../lib/cms-db";
+import { toAbsoluteUrl } from "../lib/url";
 
 const router = Router();
 
@@ -81,7 +82,7 @@ function publicRoutes(table: "blog" | "articles" | "case_studies") {
       categories: r.categories,
       feature_image: r.feature_image,
       excerpt: stripHtml(r.content),
-      external_url: r.external_url ?? "",
+      external_url: toAbsoluteUrl(r.external_url ?? ""),
     }));
 
     res.json({

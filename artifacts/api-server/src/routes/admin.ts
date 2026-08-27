@@ -7,6 +7,7 @@ import { getDb } from "../lib/cms-db";
 import { UPLOADS_DIR } from "../lib/config";
 import { logger } from "../lib/logger";
 import { sniffImage } from "../lib/file-type";
+import { toAbsoluteUrl } from "../lib/url";
 import {
   COOKIE_NAME,
   clearLoginFailures,
@@ -372,7 +373,7 @@ function crudRoutes(table: "blog" | "articles" | "case_studies") {
       const categories = String(b["categories"] ?? "[]");
       const content = String(b["content"] ?? "");
       const feature_image = String(b["feature_image"] ?? "");
-      const external_url = String(b["external_url"] ?? "").trim();
+      const external_url = toAbsoluteUrl(String(b["external_url"] ?? ""));
       if (!name || !slug || !date) {
         res.status(400).json({ error: "name, slug, and date are required" });
         return;
@@ -420,7 +421,7 @@ function crudRoutes(table: "blog" | "articles" | "case_studies") {
       const categories = String(b["categories"] ?? "[]");
       const content = String(b["content"] ?? "");
       const feature_image = String(b["feature_image"] ?? "");
-      const external_url = String(b["external_url"] ?? "").trim();
+      const external_url = toAbsoluteUrl(String(b["external_url"] ?? ""));
       const id = String(req.params["id"] ?? "");
       const db = getDb();
       const existing = db

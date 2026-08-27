@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUpRight, Menu, X, ChevronLeft, ChevronRight } from "lu
 import useEmblaCarousel from "embla-carousel-react";
 import heroVideo from "@assets/hero-video.mp4";
 import MovabilityLogo from "@/components/movability-logo";
-import { publicApi, type PublicItem, type PublicReport } from "@/lib/public-api";
+import { publicApi, toAbsoluteUrl, type PublicItem, type PublicReport } from "@/lib/public-api";
 import { useHomepageContent } from "@/lib/site-content";
 import { resolveImage } from "@/content/homepage-content";
 
@@ -427,8 +427,8 @@ export default function HomeFinal() {
                     return (
                       <div key={a.id} className="flex-[0_0_100%] sm:flex-[0_0_calc(50%-12px)] lg:flex-[0_0_calc(33.333%-16px)] min-w-0">
                         <a
-                          href={a.external_url?.trim() ? a.external_url : `/articles/${a.slug}`}
-                          {...(a.external_url?.trim()
+                          href={toAbsoluteUrl(a.external_url) || `/articles/${a.slug}`}
+                          {...(toAbsoluteUrl(a.external_url)
                             ? { target: "_blank", rel: "noopener noreferrer" }
                             : {})}
                           className="group cursor-pointer block"

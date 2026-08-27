@@ -1,5 +1,6 @@
 import { getDb } from "./cms-db";
 import { SITE_URL } from "./seo";
+import { toAbsoluteUrl } from "./url";
 
 /**
  * Writes a plain-HTML version of each page into the shell before it is sent.
@@ -81,7 +82,7 @@ function listMarkup(table: "articles" | "case_studies" | "blog"): string {
     .map(
       (r) => `<li>
         <article>
-          <h2><a href="${r.external_url ? esc(r.external_url) : `${cfg.base}/${esc(r.slug)}`}"${
+          <h2><a href="${r.external_url ? esc(toAbsoluteUrl(r.external_url)) : `${cfg.base}/${esc(r.slug)}`}"${
             r.external_url ? ' rel="noopener"' : ""
           }>${esc(r.name)}</a>${r.external_url ? " (published externally)" : ""}</h2>
           <p><time datetime="${esc(r.date)}">${esc(r.date)}</time>${

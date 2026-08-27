@@ -27,6 +27,18 @@ export type ListResponse = {
   categories: string[];
 };
 
+/** Adds https:// to a link pasted without one, so it points at the other site
+ *  rather than resolving as a path on movability.io. */
+export function toAbsoluteUrl(value: string | undefined): string {
+  const trimmed = (value ?? "").trim();
+  if (!trimmed) return "";
+  if (/^(javascript|data|vbscript):/i.test(trimmed)) return "";
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (trimmed.startsWith("//")) return `https:${trimmed}`;
+  if (trimmed.startsWith("/")) return trimmed;
+  return `https://${trimmed.replace(/^\/+/, "")}`;
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(url);
   if (!res.ok) {
