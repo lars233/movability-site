@@ -33,7 +33,7 @@ function ReportCard({ report, index }: { report: PublicReport; index: number }) 
   const card = (
     <div className="group grid md:grid-cols-[1.62fr_1fr] md:h-[420px] border border-black/[0.10] hover:border-black/25 transition-all duration-400 overflow-hidden md:max-w-[96%]">
       {/* cover image — full bleed */}
-      <div className="relative bg-black overflow-hidden min-h-[220px]">
+      <div className="relative bg-black overflow-hidden min-h-[220px] md:h-full">
         {report.image ? (
           <img
             src={report.image}
@@ -48,13 +48,13 @@ function ReportCard({ report, index }: { report: PublicReport; index: number }) 
         )}
       </div>
       {/* text panel */}
-      <div className="p-8 md:p-12 min-w-0 flex flex-col justify-between bg-[#FAFAFA] group-hover:bg-white transition-colors">
+      <div className="p-8 md:p-10 min-w-0 md:h-full overflow-hidden flex flex-col justify-between bg-[#FAFAFA] group-hover:bg-white transition-colors">
         <div>
           <h2 className="text-xl md:text-2xl font-bold leading-snug mb-4">
             {report.title}
           </h2>
           {report.subtitle && (
-            <p className="text-sm text-black/50 leading-relaxed max-w-md">{report.subtitle}</p>
+            <p className="text-sm text-black/50 leading-relaxed max-w-md line-clamp-3">{report.subtitle}</p>
           )}
           {report.date && (
             <div className="mt-6">
