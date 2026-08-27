@@ -57,24 +57,63 @@ function parseCats(raw: string): string[] {
   }
 }
 
-function ContentCard({ item, basePath, index }: { item: PublicItem; basePath: string; index: number; }) {
+function ContentRow({ item, basePath, index }: { item: PublicItem; basePath: string; index: number; }) {
   const [imgErr, setImgErr] = useState(false);
+  const cats = parseCats(item.categories).slice(0, 2);
+  // Alternate which side the image sits on, so a long list keeps a rhythm
+  // instead of reading as one repeated block.
+  const flipped = index % 2 === 1;
+
   return (
-    <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}>
-      <Link href={`${basePath}/${item.slug}`} className="group block h-full">
-        <article className="h-full bg-white rounded-xl border border-black/[0.08] overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-          <div className="aspect-[16/9] overflow-hidden bg-gray-100">
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <Link href={`${basePath}/${item.slug}`} className="group block">
+        <article
+          className={`grid md:grid-cols-2 gap-7 md:gap-14 items-center py-10 md:py-14 border-t border-black/[0.08] ${
+            flipped ? "md:[&>*:first-child]:order-2" : ""
+          }`}
+        >
+          {/* cover */}
+          <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
             {item.feature_image && !imgErr ? (
-              <img src={item.feature_image} alt={item.name} onError={() => setImgErr(true)} className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500" />
+              <img
+                src={item.feature_image}
+                alt={item.name}
+                onError={() => setImgErr(true)}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+              />
             ) : (
-              <div className="w-full h-full" style={{ background: `linear-gradient(135deg, ${BLUE}cc, #6366F1)` }} />
+              <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${BLUE}cc, #6366F1)` }} />
             )}
           </div>
-          <div className="p-5 sm:p-6 flex flex-col gap-3">
-            <div className="flex items-center gap-2.5 flex-wrap"><span className="text-xs text-black/35">{formatDate(item.date)}</span></div>
-            <h3 className="font-semibold text-base leading-snug line-clamp-2 text-gray-900 group-hover:text-blue-600 transition-colors duration-200">{item.name}</h3>
-            {item.excerpt && (<p className="text-sm text-black/55 leading-relaxed line-clamp-3">{item.excerpt}</p>)}
-            <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-blue-600">Read more{" "}<ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-200" /></div>
+
+          {/* text */}
+          <div className="flex flex-col gap-4 md:max-w-[92%]">
+            <div className="flex items-center gap-3 flex-wrap text-xs">
+              <span className="text-black/35">{formatDate(item.date)}</span>
+              {cats.map((cat) => (
+                <span key={cat} className="font-semibold uppercase tracking-[0.14em]" style={{ color: BLUE }}>
+                  {formatCategoryLabel(cat)}
+                </span>
+              ))}
+            </div>
+
+            <h3 className="text-2xl md:text-[34px] font-bold leading-[1.15] tracking-tight text-gray-900 group-hover:opacity-60 transition-opacity duration-300">
+              {item.name}
+            </h3>
+
+            {item.excerpt && (
+              <p className="text-base text-black/50 leading-relaxed line-clamp-3">{item.excerpt}</p>
+            )}
+
+            <span className="mt-1 inline-flex items-center gap-2 text-sm font-semibold" style={{ color: BLUE }}>
+              Read more
+              <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+            </span>
           </div>
         </article>
       </Link>
@@ -132,7 +171,7 @@ export default function ContentIndexPage({ type }: { type: "blog" | "articles" |
       {allCategories.length > 0 && (
         <section className="sticky top-[70px] z-30 bg-white/95 backdrop-blur border-b border-black/[0.07]"><div className="max-w-7xl mx-auto px-6 py-3"><div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-0.5"><button onClick={() => selectCategory("")} className="flex-shrink-0 text-xs font-medium px-3.5 py-1.5 rounded-full border transition-all" style={!category ? { background: BLUE, color: "white", borderColor: BLUE } : { borderColor: "rgba(0,0,0,0.15)", color: "rgba(0,0,0,0.55)" }}>All</button>{allCategories.map((cat) => (<button key={cat} onClick={() => selectCategory(category === cat ? "" : cat)} className="flex-shrink-0 text-xs font-medium px-3.5 py-1.5 rounded-full border transition-all whitespace-nowrap" style={category === cat ? { background: BLUE, color: "white", borderColor: BLUE } : { borderColor: "rgba(0,0,0,0.15)", color: "rgba(0,0,0,0.55)" }}>{formatCategoryLabel(cat)}</button>))}</div></div></section>
       )}
-      <section className="py-14 px-6"><div className="max-w-7xl mx-auto">{!loading && data && (<div className="mb-8 text-sm text-black/40">{data.total === 0 ? cfg.emptyMessage : <>{data.total} {data.total === 1 ? "result" : "results"}{search && <> {" "}for{" "}<span className="font-medium text-black/70">"{search}"</span></>}{category && <> {" "}in{" "}<span className="font-medium text-black/70">{formatCategoryLabel(category)}</span></>}</>}</div>)}{loading && (<div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">{Array.from({ length: 6 }).map((_, i) => (<div key={i} className="bg-gray-50 rounded-xl border border-black/[0.06] aspect-[4/3] animate-pulse" />))}</div>)}{error && (<div className="text-center py-20"><p className="text-red-500 text-sm mb-4">{error}</p><button onClick={() => void fetchData(search, category, page)} className="text-sm text-blue-600 hover:underline">Try again</button></div>)}{!loading && !error && data?.items.length === 0 && (<div className="text-center py-24"><p className="text-black/30 text-sm mb-4">No results found{search ? ` for "${search}"` : ""}{category ? ` in "${formatCategoryLabel(category)}"` : ""}</p>{(search || category) && (<button onClick={() => { clearSearch(); setCategory(""); }} className="text-sm text-blue-600 hover:underline">Clear filters</button>)}</div>)}{!loading && !error && data && data.items.length > 0 && (<><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">{data.items.map((item, i) => (<ContentCard key={item.id} item={item} basePath={cfg.basePath} index={i} />))}</div><Pagination page={data.page} pages={data.pages} onPage={(p) => setPage(p)} /></>)}</div></section>
+      <section className="py-14 px-6"><div className="max-w-6xl mx-auto">{!loading && data && (<div className="mb-8 text-sm text-black/40">{data.total === 0 ? cfg.emptyMessage : <>{data.total} {data.total === 1 ? "result" : "results"}{search && <> {" "}for{" "}<span className="font-medium text-black/70">"{search}"</span></>}{category && <> {" "}in{" "}<span className="font-medium text-black/70">{formatCategoryLabel(category)}</span></>}</>}</div>)}{loading && (<div className="flex flex-col">{Array.from({ length: 3 }).map((_, i) => (<div key={i} className="grid md:grid-cols-2 gap-7 md:gap-14 py-10 md:py-14 border-t border-black/[0.08]"><div className="aspect-[16/10] bg-gray-50 animate-pulse" /><div className="flex flex-col gap-4 pt-2"><div className="h-3 w-24 bg-gray-50 animate-pulse" /><div className="h-7 w-4/5 bg-gray-50 animate-pulse" /><div className="h-4 w-full bg-gray-50 animate-pulse" /><div className="h-4 w-2/3 bg-gray-50 animate-pulse" /></div></div>))}</div>)}{error && (<div className="text-center py-20"><p className="text-red-500 text-sm mb-4">{error}</p><button onClick={() => void fetchData(search, category, page)} className="text-sm text-blue-600 hover:underline">Try again</button></div>)}{!loading && !error && data?.items.length === 0 && (<div className="text-center py-24"><p className="text-black/30 text-sm mb-4">No results found{search ? ` for "${search}"` : ""}{category ? ` in "${formatCategoryLabel(category)}"` : ""}</p>{(search || category) && (<button onClick={() => { clearSearch(); setCategory(""); }} className="text-sm text-blue-600 hover:underline">Clear filters</button>)}</div>)}{!loading && !error && data && data.items.length > 0 && (<><div className="border-b border-black/[0.08]">{data.items.map((item, i) => (<ContentRow key={item.id} item={item} basePath={cfg.basePath} index={i} />))}</div><Pagination page={data.page} pages={data.pages} onPage={(p) => setPage(p)} /></>)}</div></section>
       <SiteFooter />
     </div>
   );

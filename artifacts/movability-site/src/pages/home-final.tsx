@@ -554,8 +554,8 @@ export default function HomeFinal() {
           </Reveal>
           <div className="grid md:grid-cols-3 gap-5 mb-8">
             {caseStudies.map((c, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <div className="relative border border-black/[0.10] bg-white p-8 overflow-hidden flex flex-col justify-between min-h-[220px]">
+              <Reveal key={i} delay={i * 0.1} className="h-full">
+                <div className="relative h-full border border-black/[0.10] bg-white p-8 overflow-hidden flex flex-col justify-between min-h-[220px]">
                   <div className="relative">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: BLUE }}>{c.tag}</span>
                     <h3 className="text-base font-bold leading-snug mt-4 mb-8 text-black/80">{c.title}</h3>
