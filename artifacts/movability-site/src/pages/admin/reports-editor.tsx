@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "wouter";
+import ImageCropper from "@/components/image-cropper";
 import { adminApi, type ReportEntry, type ReportRow } from "@/lib/admin-api";
 import AdminLayout from "./layout";
 
@@ -15,6 +16,7 @@ function ImageField({ value, onChange }: { value: string; onChange: (url: string
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  const [cropping, setCropping] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => { setImgError(false); }, [value]);
@@ -35,6 +37,19 @@ function ImageField({ value, onChange }: { value: string; onChange: (url: string
     }
   }
 
+  async function handleCropped(file: File) {
+    setUploadError("");
+    setUploading(true);
+    try {
+      onChange(await adminApi.uploadFile(file));
+      setCropping(false);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   return (
     <div>
       <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5">
@@ -42,7 +57,7 @@ function ImageField({ value, onChange }: { value: string; onChange: (url: string
       </label>
       {value && !imgError && (
         <div className="mb-2 relative rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-          <img src={value} alt="" onError={() => setImgError(true)} className="w-full h-36 object-cover" />
+          <img src={value} alt="" onError={() => setImgError(true)} className="w-full object-cover" style={{ aspectRatio: "1.75" }} />
         </div>
       )}
       {value && imgError && (
@@ -62,6 +77,15 @@ function ImageField({ value, onChange }: { value: string; onChange: (url: string
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => void handleFile(e)} />
           {uploading ? "Uploading…" : "↑ Upload file"}
         </label>
+        {value && !imgError && (
+          <button
+            type="button"
+            onClick={() => setCropping(true)}
+            className="text-sm font-medium text-blue-600 hover:text-blue-800"
+          >
+            ⌗ Adjust crop
+          </button>
+        )}
         {value && (
           <button type="button" onClick={() => onChange("")} className="text-sm text-red-500 hover:text-red-700">
             Remove
@@ -69,6 +93,16 @@ function ImageField({ value, onChange }: { value: string; onChange: (url: string
         )}
       </div>
       {uploadError && <p className="text-xs text-red-600 mt-1">{uploadError}</p>}
+
+      {cropping && (
+        <ImageCropper
+          src={value}
+          aspect={1.75}
+          label="how it appears on the report card"
+          onCancel={() => setCropping(false)}
+          onApply={handleCropped}
+        />
+      )}
     </div>
   );
 }

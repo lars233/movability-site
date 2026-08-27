@@ -591,8 +591,8 @@ export default function HomeFinal() {
                   <blockquote className="text-2xl md:text-3xl font-medium leading-snug text-black/80 mb-10 max-w-3xl">
                     "{activeTestimonial?.quote}"
                   </blockquote>
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-black/10">
+                  <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 border border-black/10">
                       <img
                         src={resolveImage(activeTestimonial?.image)}
                         alt={activeTestimonial?.name ?? ""}
@@ -600,8 +600,8 @@ export default function HomeFinal() {
                       />
                     </div>
                     <div>
-                      <p className="text-sm font-bold">{activeTestimonial?.name}</p>
-                      <p className="text-xs text-black/40">{activeTestimonial?.role} — {activeTestimonial?.company}</p>
+                      <p className="text-base font-bold">{activeTestimonial?.name}</p>
+                      <p className="text-sm text-black/40">{activeTestimonial?.role} — {activeTestimonial?.company}</p>
                     </div>
                   </div>
                 </motion.div>

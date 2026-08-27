@@ -3,6 +3,7 @@ import { Link, useLocation, useParams } from "wouter";
 import { adminApi, type CmsEntry, type CmsRow, type CmsType } from "@/lib/admin-api";
 import TiptapEditor from "@/components/tiptap-editor";
 import AdminLayout from "./layout";
+import ImageCropper from "@/components/image-cropper";
 
 interface AdminEditorProps {
   type: CmsType;
@@ -49,6 +50,7 @@ function ImageField({ value, onChange }: ImageFieldProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [imgError, setImgError] = useState(false);
+  const [cropping, setCropping] = useState(false);
 
   // Reset imgError whenever value changes
   useEffect(() => {
@@ -71,6 +73,19 @@ function ImageField({ value, onChange }: ImageFieldProps) {
     }
   }
 
+  async function handleCropped(file: File) {
+    setUploadError("");
+    setUploading(true);
+    try {
+      onChange(await adminApi.uploadFile(file));
+      setCropping(false);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   return (
     <div>
       <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5">
@@ -83,7 +98,8 @@ function ImageField({ value, onChange }: ImageFieldProps) {
             src={value}
             alt=""
             onError={() => setImgError(true)}
-            className="w-full h-36 object-cover"
+            className="w-full object-cover"
+            style={{ aspectRatio: "1.6" }}
           />
         </div>
       )}
@@ -118,6 +134,16 @@ function ImageField({ value, onChange }: ImageFieldProps) {
           {uploading ? "Uploading…" : "↑ Upload file"}
         </label>
 
+        {value && !imgError && (
+          <button
+            type="button"
+            onClick={() => setCropping(true)}
+            className="text-sm font-medium text-blue-600 hover:text-blue-800"
+          >
+            ⌗ Adjust crop
+          </button>
+        )}
+
         {value && (
           <button
             type="button"
@@ -131,6 +157,16 @@ function ImageField({ value, onChange }: ImageFieldProps) {
 
       {uploadError && (
         <p className="text-xs text-red-600 mt-1">{uploadError}</p>
+      )}
+
+      {cropping && (
+        <ImageCropper
+          src={value}
+          aspect={1.6}
+          label="how it appears in the list"
+          onCancel={() => setCropping(false)}
+          onApply={handleCropped}
+        />
       )}
     </div>
   );

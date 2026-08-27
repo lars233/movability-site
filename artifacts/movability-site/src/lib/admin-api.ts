@@ -110,6 +110,24 @@ export const adminApi = {
     return url;
   },
 
+  uploadFile: async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch(`${API}/upload`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+    if (!res.ok) {
+      const b = (await res.json().catch(() => ({ error: res.statusText }))) as {
+        error?: string;
+      };
+      throw new Error(b.error ?? res.statusText);
+    }
+    const { url } = (await res.json()) as { url: string };
+    return url;
+  },
+
   importCsv: (type: CmsType) =>
     apiFetch<{ imported: number; skipped: number; total: number }>(
       `${API}/import`,
