@@ -52,6 +52,16 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    // Keep the big, rarely-changing libraries in their own files so a content
+    // or copy change doesn't force everyone to re-download React as well.
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "wouter"],
+          motion: ["framer-motion"],
+        },
+      },
+    },
   },
   server: {
     port: port || 5173,

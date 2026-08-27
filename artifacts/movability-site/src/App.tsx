@@ -1,25 +1,30 @@
+import { lazy, Suspense } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
-import Home from "@/pages/home";
-import HomeV2 from "@/pages/home-v2";
-import HomeV3 from "@/pages/home-v3";
+const Home = lazy(() => import("@/pages/home"));
+const HomeV2 = lazy(() => import("@/pages/home-v2"));
+const HomeV3 = lazy(() => import("@/pages/home-v3"));
 import HomeFinal from "@/pages/home-final";
-import AdminLogin from "@/pages/admin/login";
-import AdminList from "@/pages/admin/list";
-import AdminEditor from "@/pages/admin/editor";
+const AdminLogin = lazy(() => import("@/pages/admin/login"));
+const AdminList = lazy(() => import("@/pages/admin/list"));
+const AdminEditor = lazy(() => import("@/pages/admin/editor"));
 import ContentIndexPage from "@/pages/content/index-page";
 import ContentDetailPage from "@/pages/content/detail-page";
 import ReportsPage from "@/pages/reports";
-import AdminReportsList from "@/pages/admin/reports-list";
-import AdminReportsEditor from "@/pages/admin/reports-editor";
+const AdminReportsList = lazy(() => import("@/pages/admin/reports-list"));
+const AdminReportsEditor = lazy(() => import("@/pages/admin/reports-editor"));
 import ContactPage from "@/pages/contact";
-import AdminSubmissions from "@/pages/admin/submissions";
-import AdminHomepage from "@/pages/admin/homepage";
+const AdminSubmissions = lazy(() => import("@/pages/admin/submissions"));
+const AdminHomepage = lazy(() => import("@/pages/admin/homepage"));
 
 const queryClient = new QueryClient();
+
+function PageFallback() {
+  return <div className="min-h-screen bg-white" />;
+}
 
 function Router() {
   return (
@@ -61,7 +66,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}> <Router /> </WouterRouter>
+        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <Suspense fallback={<PageFallback />}>
+            <Router />
+          </Suspense>
+        </WouterRouter>
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>

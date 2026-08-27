@@ -9,6 +9,7 @@ import { revokeSessionsIfCredentialChanged } from "./lib/auth";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { metaForPath, renderMetaTags, robotsTxt, sitemapXml } from "./lib/seo";
+import { bodyForPath } from "./lib/prerender";
 
 // Strict by default — see the note in lib/auth.ts.
 const IS_PRODUCTION = process.env["NODE_ENV"] !== "development";
@@ -146,10 +147,18 @@ if (existsSync(indexHtml)) {
     if (req.method !== "GET") return next();
     try {
       const meta = metaForPath(req.path);
-      const html = shell.replace(
+      let html = shell.replace(
         /<!--seo-->[\s\S]*?<!--\/seo-->/,
         `<!--seo-->\n    ${renderMetaTags(meta)}\n    <!--/seo-->`,
       );
+
+      // Same words the visitor sees, in the HTML itself, for readers that do
+      // not run JavaScript. React clears this the instant it mounts.
+      const body = bodyForPath(req.path);
+      if (body) {
+        html = html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+      }
+
       res.type("html").set("Cache-Control", "no-cache").send(html);
     } catch (err) {
       logger.error({ err, path: req.path }, "Could not build page metadata");
