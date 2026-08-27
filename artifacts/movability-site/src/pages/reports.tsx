@@ -31,14 +31,14 @@ function ReportCard({ report, index }: { report: PublicReport; index: number }) 
   const hasLink = !!report.download_url;
 
   const card = (
-    <div className="group grid md:grid-cols-[1.4fr_1fr] border border-black/[0.10] hover:border-black/25 transition-all duration-400 overflow-hidden md:max-w-[85%]">
+    <div className="group grid md:grid-cols-[1.62fr_1fr] md:h-[420px] border border-black/[0.10] hover:border-black/25 transition-all duration-400 overflow-hidden md:max-w-[96%]">
       {/* cover image — full bleed */}
-      <div className="relative bg-black aspect-video md:aspect-auto md:min-h-[306px] overflow-hidden">
+      <div className="relative bg-black overflow-hidden min-h-[220px]">
         {report.image ? (
           <img
             src={report.image}
             alt={report.title}
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3"
@@ -48,7 +48,7 @@ function ReportCard({ report, index }: { report: PublicReport; index: number }) 
         )}
       </div>
       {/* text panel */}
-      <div className="p-8 md:p-12 flex flex-col justify-between bg-[#FAFAFA] group-hover:bg-white transition-colors">
+      <div className="p-8 md:p-12 min-w-0 flex flex-col justify-between bg-[#FAFAFA] group-hover:bg-white transition-colors">
         <div>
           <h2 className="text-xl md:text-2xl font-bold leading-snug mb-4">
             {report.title}
