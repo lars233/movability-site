@@ -3,17 +3,17 @@ import { Link, useLocation } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
 import MovabilityLogo from "@/components/movability-logo";
+import { useHomepageContent } from "@/lib/site-content";
 
 const BLUE = "#4B5CF0";
 
-const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Reports", href: "/reports" },
-  { label: "Case Studies", href: "/case-studies" },
-  { label: "Articles", href: "/articles" },
-];
-
 export default function SiteNav() {
+  // Menu links and the button come from the CMS "Navigation" section, so the
+  // inner pages stay in step with the landing page.
+  const content = useHomepageContent();
+  const navText = content.section("nav");
+  const NAV_LINKS = content.items("nav_links");
+
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [location] = useLocation();
@@ -60,11 +60,11 @@ export default function SiteNav() {
             </Link>
           ))}
           <Link
-            href="/contact"
+            href={navText.ctaHref}
             className="ml-2 h-10 px-5 text-sm font-semibold text-white flex items-center gap-2 whitespace-nowrap hover:opacity-90 transition-opacity"
             style={{ background: `linear-gradient(135deg, ${BLUE}, #6366F1)` }}
           >
-            Get in Touch <ArrowRight size={14} />
+            {navText.ctaLabel} <ArrowRight size={14} />
           </Link>
         </nav>
 
@@ -97,12 +97,12 @@ export default function SiteNav() {
               </Link>
             ))}
             <Link
-              href="/contact"
+              href={navText.ctaHref}
               onClick={() => setMenuOpen(false)}
               className="inline-flex w-fit h-11 px-5 items-center gap-2 text-sm font-semibold text-white"
               style={{ background: `linear-gradient(135deg, ${BLUE}, #6366F1)` }}
             >
-              Get in Touch <ArrowRight size={14} />
+              {navText.ctaLabel} <ArrowRight size={14} />
             </Link>
           </motion.div>
         )}
