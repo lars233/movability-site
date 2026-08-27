@@ -231,12 +231,12 @@ export default function HomeFinal() {
         {/* background video — European public transport stock footage */}
         <video
           autoPlay muted loop playsInline preload="auto"
-          className="absolute inset-0 w-full h-full object-cover opacity-55 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover opacity-90 pointer-events-none"
           src={heroVideo}
         />
         {/* gradient overlay — dark bottom so text stays legible */}
         <div className="absolute inset-0 z-[1] pointer-events-none"
-          style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.55) 100%)" }} />
+          style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.12) 55%, rgba(0,0,0,0.30) 100%)" }} />
         {/* subtle orbital rings on top of video */}
         <HeroBg />
 
@@ -407,6 +407,73 @@ export default function HomeFinal() {
         </div>
       </section>
 
+      {/* ══ INSIGHTS / ARTICLES ═════════════════════════════════ */}
+      <section id="fn-articles" className="py-28 px-6 bg-[#FAFAFA] border-b border-black/[0.07]">
+        <div className="max-w-7xl mx-auto">
+          <Reveal>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black/35 mb-4">{insights.eyebrow}</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{insights.title}</h2>
+            <p className="text-base text-black/50 max-w-xl mb-8 leading-relaxed">
+              {insights.body}
+            </p>
+          </Reveal>
+
+          {/* article slider */}
+          {liveArticles.length > 0 ? (
+            <div className="relative">
+              <div className="overflow-hidden" ref={artRef}>
+                <div className="flex gap-6">
+                  {liveArticles.map((a) => {
+                    return (
+                      <div key={a.id} className="flex-[0_0_100%] sm:flex-[0_0_calc(50%-12px)] lg:flex-[0_0_calc(33.333%-16px)] min-w-0">
+                        <a href={`/articles/${a.slug}`} className="group cursor-pointer block">
+                          <div className="aspect-[4/3] bg-gray-100 mb-5 overflow-hidden">
+                            {a.feature_image ? (
+                              <img
+                                src={a.feature_image}
+                                alt={a.name}
+                                className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-slate-700 to-slate-900 group-hover:scale-[1.03] transition-transform duration-500" />
+                            )}
+                          </div>
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="text-xs text-black/30">{a.date}</span>
+                          </div>
+                          <h3 className="text-base font-bold leading-snug group-hover:opacity-60 transition-opacity">{a.name}</h3>
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="flex items-center justify-between mt-8">
+                <div className="flex items-center gap-3">
+                  <button onClick={scrollArtPrev}
+                    className="w-10 h-10 flex items-center justify-center border border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button onClick={scrollArtNext}
+                    className="w-10 h-10 flex items-center justify-center border border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+                <a href="/articles" className="inline-flex items-center gap-2 text-sm font-semibold text-black/50 hover:text-black transition-colors">
+                  {insights.linkLabel} <ArrowRight size={14} />
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className="flex justify-end">
+              <a href="/articles" className="inline-flex items-center gap-2 text-sm font-semibold text-black/50 hover:text-black transition-colors">
+                {insights.linkLabel} <ArrowRight size={14} />
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* ══ MY STORY ════════════════════════════════════════════ */}
       <section id="fn-story" className="py-28 px-6 bg-white border-b border-black/[0.07]">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
@@ -448,7 +515,7 @@ export default function HomeFinal() {
             <div className="overflow-hidden" ref={teamRef}>
               <div className="flex gap-6">
                 {teamMembers.map((member) => (
-                  <div key={member.name} className="flex-[0_0_calc(50%-12px)] sm:flex-[0_0_calc(33.333%-16px)] lg:flex-[0_0_calc(25%-18px)] min-w-0 group">
+                  <div key={member.name} className="flex-[0_0_calc(33.333%-16px)] sm:flex-[0_0_calc(20%-19px)] lg:flex-[0_0_calc(15%-20px)] min-w-0 group">
                     <div className="aspect-square overflow-hidden bg-[#E8E8E8] mb-4">
                       <img
                         src={resolveImage(member.image)}
@@ -620,73 +687,6 @@ export default function HomeFinal() {
               </a>
             </div>
           </Reveal>
-        </div>
-      </section>
-
-      {/* ══ INSIGHTS / ARTICLES ═════════════════════════════════ */}
-      <section id="fn-articles" className="py-28 px-6 bg-[#FAFAFA] border-b border-black/[0.07]">
-        <div className="max-w-7xl mx-auto">
-          <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black/35 mb-4">{insights.eyebrow}</p>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{insights.title}</h2>
-            <p className="text-base text-black/50 max-w-xl mb-8 leading-relaxed">
-              {insights.body}
-            </p>
-          </Reveal>
-
-          {/* article slider */}
-          {liveArticles.length > 0 ? (
-            <div className="relative">
-              <div className="overflow-hidden" ref={artRef}>
-                <div className="flex gap-6">
-                  {liveArticles.map((a) => {
-                    return (
-                      <div key={a.id} className="flex-[0_0_100%] sm:flex-[0_0_calc(50%-12px)] lg:flex-[0_0_calc(33.333%-16px)] min-w-0">
-                        <a href={`/articles/${a.slug}`} className="group cursor-pointer block">
-                          <div className="aspect-[4/3] bg-gray-100 mb-5 overflow-hidden">
-                            {a.feature_image ? (
-                              <img
-                                src={a.feature_image}
-                                alt={a.name}
-                                className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-slate-700 to-slate-900 group-hover:scale-[1.03] transition-transform duration-500" />
-                            )}
-                          </div>
-                          <div className="flex items-center gap-3 mb-2">
-                            <span className="text-xs text-black/30">{a.date}</span>
-                          </div>
-                          <h3 className="text-base font-bold leading-snug group-hover:opacity-60 transition-opacity">{a.name}</h3>
-                        </a>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="flex items-center justify-between mt-8">
-                <div className="flex items-center gap-3">
-                  <button onClick={scrollArtPrev}
-                    className="w-10 h-10 flex items-center justify-center border border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button onClick={scrollArtNext}
-                    className="w-10 h-10 flex items-center justify-center border border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-                <a href="/articles" className="inline-flex items-center gap-2 text-sm font-semibold text-black/50 hover:text-black transition-colors">
-                  {insights.linkLabel} <ArrowRight size={14} />
-                </a>
-              </div>
-            </div>
-          ) : (
-            <div className="flex justify-end">
-              <a href="/articles" className="inline-flex items-center gap-2 text-sm font-semibold text-black/50 hover:text-black transition-colors">
-                {insights.linkLabel} <ArrowRight size={14} />
-              </a>
-            </div>
-          )}
         </div>
       </section>
 
