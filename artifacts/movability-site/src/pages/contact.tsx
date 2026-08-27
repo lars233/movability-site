@@ -75,9 +75,9 @@ export default function ContactPage() {
               Get in Touch
             </p>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight tracking-tight mb-5 max-w-2xl">
-              Let's close the{" "}
+              Let's talk about{" "}
               <span style={{ backgroundImage: `linear-gradient(135deg, ${BLUE}, #6366F1)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                gap together.
+                your challenge.
               </span>
             </h1>
             <p className="text-base text-black/45 max-w-lg leading-relaxed">

@@ -105,9 +105,9 @@ function RelatedCard({ item, basePath }: { item: PublicItem; basePath: string })
             )}
             <span className="text-xs text-black/35">{formatDate(item.date)}</span>
           </div>
-          <h4 className="font-semibold text-sm leading-snug line-clamp-2 text-gray-900 group-hover:text-blue-600 transition-colors">
+          <h3 className="font-semibold text-sm leading-snug line-clamp-2 text-gray-900 group-hover:text-blue-600 transition-colors">
             {item.name}
-          </h4>
+          </h3>
           {item.excerpt && (
             <p className="text-xs text-black/50 leading-relaxed line-clamp-2 mt-2">
               {item.excerpt}

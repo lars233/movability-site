@@ -102,9 +102,9 @@ function ContentRow({ item, basePath, index }: { item: PublicItem; basePath: str
               ))}
             </div>
 
-            <h3 className="text-2xl md:text-[34px] font-bold leading-[1.15] tracking-tight text-gray-900 group-hover:opacity-60 transition-opacity duration-300">
+            <h2 className="text-2xl md:text-[34px] font-bold leading-[1.15] tracking-tight text-gray-900 group-hover:opacity-60 transition-opacity duration-300">
               {item.name}
-            </h3>
+            </h2>
 
             {item.excerpt && (
               <p className="text-base text-black/50 leading-relaxed line-clamp-3">{item.excerpt}</p>

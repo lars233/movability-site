@@ -152,11 +152,16 @@ if (existsSync(indexHtml)) {
         `<!--seo-->\n    ${renderMetaTags(meta)}\n    <!--/seo-->`,
       );
 
-      // Same words the visitor sees, in the HTML itself, for readers that do
-      // not run JavaScript. React clears this the instant it mounts.
+      // The same words the visitor sees, in the HTML itself, for readers that
+      // do not run JavaScript (Bing, LinkedIn, the AI crawlers). It sits in a
+      // <noscript> block so a normal browser never paints it — otherwise this
+      // markup flashes on screen for the moment before React mounts.
       const body = bodyForPath(req.path);
       if (body) {
-        html = html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+        html = html.replace(
+          '<div id="root"></div>',
+          `<div id="root"><noscript>${body}</noscript></div>`,
+        );
       }
 
       res.type("html").set("Cache-Control", "no-cache").send(html);
