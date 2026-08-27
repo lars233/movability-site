@@ -72,7 +72,7 @@ function listMarkup(table: "articles" | "case_studies" | "blog"): string {
   const cfg = SECTION_LABELS[table];
   const rows = getDb()
     .prepare(
-      `SELECT name, slug, date, content, categories FROM ${table}
+      `SELECT name, slug, date, content, categories, external_url FROM ${table}
         WHERE status = 'published' ORDER BY date DESC LIMIT 50`,
     )
     .all() as Row[];
@@ -81,7 +81,9 @@ function listMarkup(table: "articles" | "case_studies" | "blog"): string {
     .map(
       (r) => `<li>
         <article>
-          <h2><a href="${cfg.base}/${esc(r.slug)}">${esc(r.name)}</a></h2>
+          <h2><a href="${r.external_url ? esc(r.external_url) : `${cfg.base}/${esc(r.slug)}`}"${
+            r.external_url ? ' rel="noopener"' : ""
+          }>${esc(r.name)}</a>${r.external_url ? " (published externally)" : ""}</h2>
           <p><time datetime="${esc(r.date)}">${esc(r.date)}</time>${
             parseCats(r.categories).length ? ` · ${esc(parseCats(r.categories).join(", "))}` : ""
           }</p>

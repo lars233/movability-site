@@ -26,6 +26,9 @@ export type CmsEntry = {
   categories: string;
   content: string;
   feature_image: string;
+  /** If set, the site links straight to this address instead of opening a
+   *  detail page — for interviews published on Zag Daily and similar. */
+  external_url: string;
 };
 
 export type CmsRow = CmsEntry & {

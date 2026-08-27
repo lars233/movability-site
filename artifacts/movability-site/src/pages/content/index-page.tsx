@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowRight, Search, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Search, X } from "lucide-react";
 import { publicApi, type PublicItem, type ListResponse } from "@/lib/public-api";
 import { formatCategoryLabel } from "@/lib/category-format";
 import SiteNav from "@/components/site-nav";
@@ -60,6 +60,9 @@ function parseCats(raw: string): string[] {
 function ContentRow({ item, basePath, index }: { item: PublicItem; basePath: string; index: number; }) {
   const [imgErr, setImgErr] = useState(false);
   const cats = parseCats(item.categories).slice(0, 2);
+  // Pieces published elsewhere open on that site instead of a detail page.
+  const external = (item.external_url ?? "").trim();
+  const host = external ? external.replace(/^https?:\/\//, "").split("/")[0].replace(/^www\./, "") : "";
   // Alternate which side the image sits on, so a long list keeps a rhythm
   // instead of reading as one repeated block.
   const flipped = index % 2 === 1;
@@ -71,7 +74,7 @@ function ContentRow({ item, basePath, index }: { item: PublicItem; basePath: str
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Link href={`${basePath}/${item.slug}`} className="group block">
+      <LinkOrAnchor external={external} href={`${basePath}/${item.slug}`}>
         <article
           className={`grid md:grid-cols-2 gap-7 md:gap-14 items-center py-10 md:py-14 border-t border-black/[0.08] ${
             flipped ? "md:[&>*:first-child]:order-2" : ""
@@ -111,13 +114,41 @@ function ContentRow({ item, basePath, index }: { item: PublicItem; basePath: str
             )}
 
             <span className="mt-1 inline-flex items-center gap-2 text-sm font-semibold" style={{ color: BLUE }}>
-              Read more
-              <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+              {external ? `Read on ${host}` : "Read more"}
+              {external ? (
+                <ArrowUpRight size={15} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+              ) : (
+                <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform duration-300" />
+              )}
             </span>
           </div>
         </article>
-      </Link>
+      </LinkOrAnchor>
     </motion.div>
+  );
+}
+
+/** Renders an internal route link, or an outbound link for external pieces. */
+function LinkOrAnchor({
+  external,
+  href,
+  children,
+}: {
+  external: string;
+  href: string;
+  children: React.ReactNode;
+}) {
+  if (external) {
+    return (
+      <a href={external} target="_blank" rel="noopener noreferrer" className="group block">
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className="group block">
+      {children}
+    </Link>
   );
 }
 

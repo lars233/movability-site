@@ -11,6 +11,7 @@ type Row = {
   categories: string;
   feature_image: string;
   content: string;
+  external_url: string;
 };
 
 function stripHtml(html: string): string {
@@ -43,7 +44,7 @@ function publicRoutes(table: "blog" | "articles" | "case_studies") {
 
     const allRows = db
       .prepare(
-        `SELECT id, name, slug, date, categories, feature_image, content
+        `SELECT id, name, slug, date, categories, feature_image, content, external_url
          FROM ${table}
          WHERE status = 'published'
          ORDER BY date DESC`,
@@ -80,6 +81,7 @@ function publicRoutes(table: "blog" | "articles" | "case_studies") {
       categories: r.categories,
       feature_image: r.feature_image,
       excerpt: stripHtml(r.content),
+      external_url: r.external_url ?? "",
     }));
 
     res.json({

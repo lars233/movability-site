@@ -261,7 +261,9 @@ export function sitemapXml(): string {
   ] as const) {
     const rows = db
       .prepare(
-        `SELECT slug, date, updated_at FROM ${table} WHERE status = 'published' ORDER BY date DESC`,
+        `SELECT slug, date, updated_at FROM ${table}
+          WHERE status = 'published' AND (external_url IS NULL OR external_url = '')
+          ORDER BY date DESC`,
       )
       .all() as { slug: string; date: string; updated_at: string }[];
     for (const row of rows) {

@@ -109,6 +109,18 @@ function migrate(db: DatabaseSync) {
     }
   }
 
+  // Optional link to a piece published elsewhere (e.g. Zag Daily). When set,
+  // the site links straight out instead of opening an empty detail page.
+  for (const table of ["blog", "articles", "case_studies"]) {
+    try {
+      db.exec(
+        `ALTER TABLE ${table} ADD COLUMN external_url TEXT NOT NULL DEFAULT ''`,
+      );
+    } catch {
+      // Column already exists — safe to ignore
+    }
+  }
+
   // Add date to reports table (idempotent — table may have been created without it)
   try {
     db.exec(`ALTER TABLE reports ADD COLUMN date TEXT NOT NULL DEFAULT ''`);

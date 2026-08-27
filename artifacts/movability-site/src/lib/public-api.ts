@@ -6,6 +6,8 @@ export type PublicItem = {
   categories: string;
   feature_image: string;
   excerpt: string;
+  /** Set when the piece lives on another site (e.g. Zag Daily). */
+  external_url?: string;
 };
 
 export type PublicDetail = Omit<PublicItem, "excerpt"> & {

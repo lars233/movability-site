@@ -187,6 +187,7 @@ export default function AdminEditor({ type }: AdminEditorProps) {
     categories: "[]",
     content: "",
     feature_image: "",
+    external_url: "",
   });
   const [cats, setCats] = useState<string[]>([]);
   const [catInput, setCatInput] = useState("");
@@ -213,6 +214,7 @@ export default function AdminEditor({ type }: AdminEditorProps) {
             date: row.date,
             categories: row.categories,
             content: row.content,
+            external_url: row.external_url ?? "",
             feature_image: row.feature_image ?? "",
           });
           setCats(parseCategories(row.categories));
@@ -342,6 +344,25 @@ export default function AdminEditor({ type }: AdminEditorProps) {
                 value={form.feature_image}
                 onChange={(url) => setField("feature_image", url)}
               />
+
+              {/* Published elsewhere */}
+              <div>
+                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5">
+                  Published elsewhere
+                </label>
+                <input
+                  type="url"
+                  value={form.external_url}
+                  onChange={(e) => setField("external_url", e.target.value)}
+                  placeholder="https://zagdaily.com/…"
+                  className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <p className="text-[11px] text-gray-400 mt-1.5 leading-snug">
+                  {form.external_url.trim()
+                    ? "This piece will open on the other site. The body text below is not shown, so it can stay empty."
+                    : "Leave empty for interviews hosted on movability.io. Add a link and the site opens that page instead."}
+                </p>
+              </div>
 
               {/* Status */}
               <div>
