@@ -18,6 +18,7 @@ const CONFIG = {
     basePath: "/blog",
     listFn: publicApi.listBlog,
     emptyMessage: "No blog posts yet.",
+    search: "hero" as const,
   },
   articles: {
     eyebrow: "Articles",
@@ -27,6 +28,7 @@ const CONFIG = {
     basePath: "/articles",
     listFn: publicApi.listArticles,
     emptyMessage: "No articles yet.",
+    search: "bottom" as const,
   },
   case_studies: {
     eyebrow: "CASE STUDIES",
@@ -36,6 +38,7 @@ const CONFIG = {
     basePath: "/case-studies",
     listFn: publicApi.listCaseStudies,
     emptyMessage: "No case studies yet.",
+    search: "none" as const,
   },
 };
 
@@ -179,6 +182,25 @@ export default function ContentIndexPage({ type }: { type: "blog" | "articles" |
   useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [page]);
   const allCategories = data?.categories ?? [];
 
+  const searchField = (
+    <>
+      <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-black/30 pointer-events-none" />
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => handleSearchInput(e.target.value)}
+        placeholder={`Search ${cfg.eyebrow.toLowerCase()}…`}
+        aria-label={`Search ${cfg.eyebrow.toLowerCase()}`}
+        className="w-full pl-11 pr-10 py-3.5 text-sm border border-black/[0.14] focus:outline-none focus:border-blue-500 transition-colors bg-white"
+      />
+      {inputValue && (
+        <button onClick={clearSearch} aria-label="Clear search" className="absolute right-4 top-1/2 -translate-y-1/2 text-black/30 hover:text-black transition-colors">
+          <X size={14} />
+        </button>
+      )}
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-white text-black antialiased" style={{ fontFamily: "'DM Sans', 'Inter', sans-serif" }}>
       <SiteNav />
@@ -191,11 +213,11 @@ export default function ContentIndexPage({ type }: { type: "blog" | "articles" |
               className="text-4xl md:text-6xl font-bold leading-tight mb-5 tracking-tight max-w-2xl">{cfg.title}</motion.h1>
             <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.12 }}
               className="text-base text-black/45 leading-relaxed mb-10 max-w-lg">{cfg.subtitle}</motion.p>
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.18 }} className="relative max-w-lg">
-              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-black/30 pointer-events-none" />
-              <input type="text" value={inputValue} onChange={(e) => handleSearchInput(e.target.value)} placeholder={`Search ${cfg.eyebrow.toLowerCase()}…`} className="w-full pl-11 pr-10 py-3.5 text-sm border border-black/[0.14] focus:outline-none focus:border-blue-500 transition-colors bg-white" />
-              {inputValue && (<button onClick={clearSearch} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/30 hover:text-black transition-colors"><X size={14} /></button>)}
-            </motion.div>
+            {cfg.search === "hero" && (
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.18 }} className="relative max-w-lg">
+                {searchField}
+              </motion.div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -203,6 +225,14 @@ export default function ContentIndexPage({ type }: { type: "blog" | "articles" |
         <section className="sticky top-[70px] z-30 bg-white/95 backdrop-blur border-b border-black/[0.07]"><div className="max-w-7xl mx-auto px-6 py-3"><div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-0.5"><button onClick={() => selectCategory("")} className="flex-shrink-0 text-xs font-medium px-3.5 py-1.5 rounded-full border transition-all" style={!category ? { background: BLUE, color: "white", borderColor: BLUE } : { borderColor: "rgba(0,0,0,0.15)", color: "rgba(0,0,0,0.55)" }}>All</button>{allCategories.map((cat) => (<button key={cat} onClick={() => selectCategory(category === cat ? "" : cat)} className="flex-shrink-0 text-xs font-medium px-3.5 py-1.5 rounded-full border transition-all whitespace-nowrap" style={category === cat ? { background: BLUE, color: "white", borderColor: BLUE } : { borderColor: "rgba(0,0,0,0.15)", color: "rgba(0,0,0,0.55)" }}>{formatCategoryLabel(cat)}</button>))}</div></div></section>
       )}
       <section className="py-14 px-6"><div className="max-w-6xl mx-auto">{!loading && data && (<div className="mb-8 text-sm text-black/40">{data.total === 0 ? cfg.emptyMessage : <>{data.total} {data.total === 1 ? "result" : "results"}{search && <> {" "}for{" "}<span className="font-medium text-black/70">"{search}"</span></>}{category && <> {" "}in{" "}<span className="font-medium text-black/70">{formatCategoryLabel(category)}</span></>}</>}</div>)}{loading && (<div className="flex flex-col">{Array.from({ length: 3 }).map((_, i) => (<div key={i} className="grid md:grid-cols-2 gap-7 md:gap-14 py-10 md:py-14 border-t border-black/[0.08]"><div className="aspect-[16/10] bg-gray-50 animate-pulse" /><div className="flex flex-col gap-4 pt-2"><div className="h-3 w-24 bg-gray-50 animate-pulse" /><div className="h-7 w-4/5 bg-gray-50 animate-pulse" /><div className="h-4 w-full bg-gray-50 animate-pulse" /><div className="h-4 w-2/3 bg-gray-50 animate-pulse" /></div></div>))}</div>)}{error && (<div className="text-center py-20"><p className="text-red-500 text-sm mb-4">{error}</p><button onClick={() => void fetchData(search, category, page)} className="text-sm text-blue-600 hover:underline">Try again</button></div>)}{!loading && !error && data?.items.length === 0 && (<div className="text-center py-24"><p className="text-black/30 text-sm mb-4">No results found{search ? ` for "${search}"` : ""}{category ? ` in "${formatCategoryLabel(category)}"` : ""}</p>{(search || category) && (<button onClick={() => { clearSearch(); setCategory(""); }} className="text-sm text-blue-600 hover:underline">Clear filters</button>)}</div>)}{!loading && !error && data && data.items.length > 0 && (<><div className="border-b border-black/[0.08]">{data.items.map((item, i) => (<ContentRow key={item.id} item={item} basePath={cfg.basePath} index={i} />))}</div><Pagination page={data.page} pages={data.pages} onPage={(p) => setPage(p)} /></>)}</div></section>
+      {cfg.search === "bottom" && (
+        <section className="px-6 pb-20">
+          <div className="max-w-6xl mx-auto border-t border-black/[0.08] pt-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black/35 mb-4">Search {cfg.eyebrow.toLowerCase()}</p>
+            <div className="relative max-w-lg">{searchField}</div>
+          </div>
+        </section>
+      )}
       <SiteFooter />
     </div>
   );
