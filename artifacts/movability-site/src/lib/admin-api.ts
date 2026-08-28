@@ -25,6 +25,9 @@ export type CmsEntry = {
   date: string;
   categories: string;
   content: string;
+  /** Short introduction shown under the title on the list pages. Falls back
+   *  to the start of the body text when left empty. */
+  summary: string;
   feature_image: string;
   /** If set, the site links straight to this address instead of opening a
    *  detail page — for interviews published on Zag Daily and similar. */

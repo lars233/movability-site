@@ -374,14 +374,15 @@ function crudRoutes(table: "blog" | "articles" | "case_studies") {
       const content = String(b["content"] ?? "");
       const feature_image = String(b["feature_image"] ?? "");
       const external_url = toAbsoluteUrl(String(b["external_url"] ?? ""));
+      const summary = String(b["summary"] ?? "").trim().slice(0, 400);
       if (!name || !slug || !date) {
         res.status(400).json({ error: "name, slug, and date are required" });
         return;
       }
       const db = getDb();
       const stmt = db.prepare(`
-        INSERT INTO ${table} (name, slug, status, date, categories, content, feature_image, external_url)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO ${table} (name, slug, status, date, categories, content, feature_image, external_url, summary)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       try {
         const info = stmt.run(
@@ -393,6 +394,7 @@ function crudRoutes(table: "blog" | "articles" | "case_studies") {
           content,
           feature_image,
           external_url,
+          summary,
         );
         const row = db
           .prepare(`SELECT * FROM ${table} WHERE id = ?`)
@@ -422,6 +424,7 @@ function crudRoutes(table: "blog" | "articles" | "case_studies") {
       const content = String(b["content"] ?? "");
       const feature_image = String(b["feature_image"] ?? "");
       const external_url = toAbsoluteUrl(String(b["external_url"] ?? ""));
+      const summary = String(b["summary"] ?? "").trim().slice(0, 400);
       const id = String(req.params["id"] ?? "");
       const db = getDb();
       const existing = db
@@ -434,11 +437,12 @@ function crudRoutes(table: "blog" | "articles" | "case_studies") {
       const stmt = db.prepare(`
         UPDATE ${table}
         SET name = ?, slug = ?, status = ?, date = ?, categories = ?,
-            content = ?, feature_image = ?, external_url = ?, updated_at = datetime('now')
+            content = ?, feature_image = ?, external_url = ?, summary = ?,
+            updated_at = datetime('now')
         WHERE id = ?
       `);
       try {
-        stmt.run(name, slug, status, date, categories, content, feature_image, external_url, id);
+        stmt.run(name, slug, status, date, categories, content, feature_image, external_url, summary, id);
         const row = db.prepare(`SELECT * FROM ${table} WHERE id = ?`).get(id);
         res.json(row);
       } catch (err: unknown) {

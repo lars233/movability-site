@@ -73,7 +73,7 @@ function listMarkup(table: "articles" | "case_studies" | "blog"): string {
   const cfg = SECTION_LABELS[table];
   const rows = getDb()
     .prepare(
-      `SELECT name, slug, date, content, categories, external_url FROM ${table}
+      `SELECT name, slug, date, content, summary, categories, external_url FROM ${table}
         WHERE status = 'published' ORDER BY date DESC LIMIT 50`,
     )
     .all() as Row[];
@@ -88,7 +88,7 @@ function listMarkup(table: "articles" | "case_studies" | "blog"): string {
           <p><time datetime="${esc(r.date)}">${esc(r.date)}</time>${
             parseCats(r.categories).length ? ` · ${esc(parseCats(r.categories).join(", "))}` : ""
           }</p>
-          <p>${esc(stripHtml(r.content))}</p>
+          <p>${esc(String(r.summary ?? "").trim() || stripHtml(r.content))}</p>
         </article>
       </li>`,
     )

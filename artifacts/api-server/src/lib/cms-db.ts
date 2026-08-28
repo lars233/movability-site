@@ -121,6 +121,18 @@ function migrate(db: DatabaseSync) {
     }
   }
 
+  // Short introduction shown under the title on /blog and /articles list pages.
+  // When empty the site falls back to the first part of the body text.
+  for (const table of ["blog", "articles", "case_studies"]) {
+    try {
+      db.exec(
+        `ALTER TABLE ${table} ADD COLUMN summary TEXT NOT NULL DEFAULT ''`,
+      );
+    } catch {
+      // Column already exists — safe to ignore
+    }
+  }
+
   // Add date to reports table (idempotent — table may have been created without it)
   try {
     db.exec(`ALTER TABLE reports ADD COLUMN date TEXT NOT NULL DEFAULT ''`);

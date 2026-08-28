@@ -186,6 +186,7 @@ export default function AdminEditor({ type }: AdminEditorProps) {
     date: new Date().toISOString().slice(0, 10),
     categories: "[]",
     content: "",
+    summary: "",
     feature_image: "",
     external_url: "",
   });
@@ -214,6 +215,7 @@ export default function AdminEditor({ type }: AdminEditorProps) {
             date: row.date,
             categories: row.categories,
             content: row.content,
+            summary: row.summary ?? "",
             external_url: row.external_url ?? "",
             feature_image: row.feature_image ?? "",
           });
@@ -323,6 +325,27 @@ export default function AdminEditor({ type }: AdminEditorProps) {
               placeholder="Title"
               className="w-full text-2xl font-semibold text-gray-900 border-0 border-b border-gray-200 pb-2 focus:outline-none focus:border-blue-500 bg-transparent placeholder-gray-300"
             />
+
+            <div>
+              <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5">
+                Introduction
+              </label>
+              <textarea
+                value={form.summary}
+                onChange={(e) => setField("summary", e.target.value.slice(0, 400))}
+                rows={3}
+                placeholder="One or two sentences shown under the title on the list page…"
+                className="w-full text-sm text-gray-800 border border-gray-300 rounded-lg px-3 py-2.5 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+              />
+              <div className="flex items-start justify-between gap-4 mt-1.5">
+                <p className="text-[11px] text-gray-400 leading-snug">
+                  Appears under the title on the list page. Leave empty to use the opening of the body text.
+                </p>
+                <span className="text-[11px] text-gray-400 tabular-nums flex-shrink-0">
+                  {form.summary.length}/400
+                </span>
+              </div>
+            </div>
 
             <div>
               <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5">

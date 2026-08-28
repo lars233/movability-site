@@ -89,6 +89,7 @@ type ContentRow = {
   slug: string;
   date: string;
   content: string;
+  summary: string;
   feature_image: string;
 };
 
@@ -111,7 +112,7 @@ function absolute(url: string): string {
 function lookup(table: "blog" | "articles" | "case_studies", slug: string): ContentRow | undefined {
   return getDb()
     .prepare(
-      `SELECT name, slug, date, content, feature_image
+      `SELECT name, slug, date, content, summary, feature_image
          FROM ${table}
         WHERE slug = ? AND status = 'published'`,
     )
@@ -140,7 +141,11 @@ export function metaForPath(pathname: string): PageMeta {
     const table = detail[1] === "case-studies" ? "case_studies" : (detail[1] as "blog" | "articles");
     const row = lookup(table, decodeURIComponent(detail[2]));
     if (row) {
-      const description = excerpt(row.content, DEFAULT_DESCRIPTION);
+      // The hand-written introduction wins; otherwise fall back to the body.
+      const summary = String(row.summary ?? "").trim();
+      const description = summary
+        ? excerpt(summary, DEFAULT_DESCRIPTION)
+        : excerpt(row.content, DEFAULT_DESCRIPTION);
       return {
         title: `${row.name} | ${SITE_NAME}`,
         description,
