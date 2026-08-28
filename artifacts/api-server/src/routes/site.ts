@@ -39,6 +39,10 @@ const SECTIONS = [
   "reports",
   "insights",
   "cta",
+  "page_articles",
+  "page_case_studies",
+  "page_blog",
+  "page_contact",
 ] as const;
 
 function isSection(value: string): boolean {

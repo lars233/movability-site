@@ -53,6 +53,14 @@ const ORGANISATION = {
   ],
 };
 
+/** Which CMS section holds the editable wording for each static page. */
+const CMS_PAGE_KEYS: Record<string, string> = {
+  "/articles": "page_articles",
+  "/case-studies": "page_case_studies",
+  "/blog": "page_blog",
+  "/contact": "page_contact",
+};
+
 const STATIC_PAGES: Record<string, Omit<PageMeta, "canonical" | "image" | "type">> = {
   "/": {
     title: "Movability — Mobility strategy for cities and transport operators",
@@ -119,6 +127,23 @@ function lookup(table: "blog" | "articles" | "case_studies", slug: string): Cont
     .get(slug) as ContentRow | undefined;
 }
 
+/** Reads an edited section from the CMS, ignoring blank fields. */
+function cmsSection(key: string): Record<string, string> {
+  try {
+    const row = getDb()
+      .prepare(`SELECT data FROM site_content WHERE key = ?`)
+      .get(key) as { data?: string } | undefined;
+    const parsed = JSON.parse(row?.data ?? "{}") as Record<string, unknown>;
+    const out: Record<string, string> = {};
+    for (const [k, v] of Object.entries(parsed)) {
+      if (typeof v === "string" && v.trim() !== "") out[k] = v.trim();
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
 /** Works out the metadata for a given site path. */
 export function metaForPath(pathname: string): PageMeta {
   const path = pathname.replace(/\/+$/, "") || "/";
@@ -175,8 +200,15 @@ export function metaForPath(pathname: string): PageMeta {
 
   const staticPage = STATIC_PAGES[path];
   if (staticPage) {
+    // When the page's intro text has been rewritten in the CMS, use it as the
+    // search-result description so the two never drift apart. The title stays
+    // as tuned here — it is written for search results, not for the page.
+    const cmsKey = CMS_PAGE_KEYS[path];
+    const edited = cmsKey ? cmsSection(cmsKey) : {};
+    const intro = edited["subtitle"] ?? edited["body"] ?? "";
     return {
       ...staticPage,
+      ...(intro ? { description: excerpt(intro, staticPage.description) } : {}),
       canonical,
       image: DEFAULT_IMAGE,
       type: "website",

@@ -50,6 +50,29 @@ function stripHtml(html: string, limit = 220): string {
   return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
 }
 
+/** Reads an edited section from the CMS, ignoring blank fields. */
+function cmsSection(key: string): Record<string, string> {
+  try {
+    const row = getDb()
+      .prepare(`SELECT data FROM site_content WHERE key = ?`)
+      .get(key) as { data?: string } | undefined;
+    const parsed = JSON.parse(row?.data ?? "{}") as Record<string, unknown>;
+    const out: Record<string, string> = {};
+    for (const [k, v] of Object.entries(parsed)) {
+      if (typeof v === "string" && v.trim() !== "") out[k] = v.trim();
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+const CMS_KEYS: Record<string, string> = {
+  articles: "page_articles",
+  case_studies: "page_case_studies",
+  blog: "page_blog",
+};
+
 const SECTION_LABELS: Record<string, { title: string; intro: string; base: string }> = {
   articles: {
     title: "Mobility Expert Interviews",
@@ -70,7 +93,13 @@ const SECTION_LABELS: Record<string, { title: string; intro: string; base: strin
 };
 
 function listMarkup(table: "articles" | "case_studies" | "blog"): string {
-  const cfg = SECTION_LABELS[table];
+  const base = SECTION_LABELS[table];
+  const edited = cmsSection(CMS_KEYS[table] ?? "");
+  const cfg = {
+    ...base,
+    title: edited["title"] ?? base.title,
+    intro: edited["subtitle"] ?? base.intro,
+  };
   const rows = getDb()
     .prepare(
       `SELECT name, slug, date, content, summary, categories, external_url FROM ${table}

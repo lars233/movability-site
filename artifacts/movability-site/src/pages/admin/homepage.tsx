@@ -93,6 +93,55 @@ const SECTION_FIELDS: Record<SectionKey, Field[]> = {
     { key: "emailPlaceholder", label: "Email field placeholder" },
     { key: "buttonLabel", label: "Button label" },
   ],
+  page_articles: [
+    { key: "eyebrow", label: "Eyebrow" },
+    { key: "title", label: "Headline" },
+    { key: "subtitle", label: "Intro text", type: "textarea" },
+    { key: "emptyLabel", label: "Text when the list is empty" },
+    { key: "searchLabel", label: "Search heading" },
+    { key: "searchPlaceholder", label: "Search box placeholder" },
+  ],
+  page_case_studies: [
+    { key: "eyebrow", label: "Eyebrow" },
+    { key: "title", label: "Headline" },
+    { key: "subtitle", label: "Intro text", type: "textarea" },
+    { key: "emptyLabel", label: "Text when the list is empty" },
+    { key: "searchLabel", label: "Search heading" },
+    { key: "searchPlaceholder", label: "Search box placeholder" },
+  ],
+  page_blog: [
+    { key: "eyebrow", label: "Eyebrow" },
+    { key: "title", label: "Headline" },
+    { key: "subtitle", label: "Intro text", type: "textarea" },
+    { key: "emptyLabel", label: "Text when the list is empty" },
+    { key: "searchLabel", label: "Search heading" },
+    { key: "searchPlaceholder", label: "Search box placeholder" },
+  ],
+  page_contact: [
+    { key: "eyebrow", label: "Eyebrow" },
+    { key: "title", label: "Headline — line 1" },
+    { key: "titleAccent", label: "Headline — gradient part" },
+    { key: "body", label: "Intro text", type: "textarea" },
+    { key: "photoName", label: "Name under the photo" },
+    { key: "photoRole", label: "Role under the photo" },
+    { key: "labelName", label: "Form — name label" },
+    { key: "placeholderName", label: "Form — name placeholder" },
+    { key: "labelEmail", label: "Form — email label" },
+    { key: "placeholderEmail", label: "Form — email placeholder" },
+    { key: "labelCompany", label: "Form — company label" },
+    { key: "placeholderCompany", label: "Form — company placeholder" },
+    { key: "labelCountry", label: "Form — country label" },
+    { key: "placeholderCountry", label: "Form — country placeholder" },
+    { key: "labelObjective", label: "Form — objective label" },
+    { key: "placeholderObjective", label: "Form — objective placeholder" },
+    { key: "labelOverview", label: "Form — overview label" },
+    { key: "placeholderOverview", label: "Form — overview placeholder", type: "textarea" },
+    { key: "submitLabel", label: "Submit button" },
+    { key: "sendingLabel", label: "Submit button while sending" },
+    { key: "successTitle", label: "Thank-you headline" },
+    { key: "successBody", label: "Thank-you text", type: "textarea" },
+    { key: "successLinkLabel", label: "Thank-you link" },
+  ],
 };
 
 const COLLECTION_FIELDS: Record<CollectionKey, Field[]> = {
@@ -157,7 +206,12 @@ const COLLECTION_LABELS: Record<CollectionKey, string> = {
   testimonials: "References",
 };
 
-type Panel = { id: SectionKey; label: string; collections: CollectionKey[] };
+type Panel = {
+  id: SectionKey;
+  label: string;
+  collections: CollectionKey[];
+  group?: "landing" | "pages";
+};
 
 const PANELS: Panel[] = [
   { id: "hero", label: "Hero", collections: [] },
@@ -173,6 +227,10 @@ const PANELS: Panel[] = [
   { id: "reports", label: "Reports", collections: [] },
   { id: "insights", label: "Articles", collections: [] },
   { id: "cta", label: "Closing CTA", collections: [] },
+  { id: "page_articles", label: "Articles page", collections: [], group: "pages" },
+  { id: "page_case_studies", label: "Case Studies page", collections: [], group: "pages" },
+  { id: "page_blog", label: "Blog page", collections: [], group: "pages" },
+  { id: "page_contact", label: "Contact page", collections: [], group: "pages" },
 ];
 
 type Row = { data: Record<string, string>; visible: boolean };
@@ -394,31 +452,43 @@ export default function AdminHomepage() {
     <AdminLayout>
       <div className="max-w-5xl mx-auto p-6 md:p-10">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Landing page</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Page text</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Edit the wording and lists on the homepage. Anything you leave blank falls
-            back to the original text.
+            Edit the wording and lists on the landing page, the three list pages and the
+            contact page. Anything you leave blank falls back to the original text.
           </p>
         </div>
 
-        {/* section tabs */}
-        <div className="flex flex-wrap gap-1.5 mb-8">
-          {PANELS.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => {
-                setActive(p.id);
-                setStatus("");
-                setError("");
-              }}
-              className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
-                p.id === active
-                  ? "bg-blue-600 border-blue-600 text-white font-medium"
-                  : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"
-              }`}
-            >
-              {p.label}
-            </button>
+        {/* section tabs, grouped by page */}
+        <div className="space-y-4 mb-8">
+          {([
+            { key: "landing", label: "Landing page" },
+            { key: "pages", label: "Other pages" },
+          ] as const).map((g) => (
+            <div key={g.key}>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 mb-2">
+                {g.label}
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {PANELS.filter((p) => (p.group ?? "landing") === g.key).map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      setActive(p.id);
+                      setStatus("");
+                      setError("");
+                    }}
+                    className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                      p.id === active
+                        ? "bg-blue-600 border-blue-600 text-white font-medium"
+                        : "bg-white border-gray-200 text-gray-600 hover:border-gray-300"
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 

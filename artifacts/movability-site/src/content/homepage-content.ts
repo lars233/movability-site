@@ -164,6 +164,62 @@ export const DEFAULT_SECTIONS = {
     emailPlaceholder: "Your email address",
     buttonLabel: "Let's talk",
   },
+  /* ── Other pages ─────────────────────────────────────────────
+     The list pages and the contact page. Same merge rules as the
+     landing-page sections above: blank falls back to this copy. */
+  page_articles: {
+    eyebrow: "Articles",
+    title: "Mobility Expert Interviews",
+    subtitle:
+      "In-depth chats with operators, regulators and officials to help you understand how transport is evolving.",
+    emptyLabel: "No articles yet.",
+    searchLabel: "Search articles",
+    searchPlaceholder: "Search articles…",
+  },
+  page_case_studies: {
+    eyebrow: "Case Studies",
+    title: "How we've closed the gap before",
+    subtitle: "Previous Movability projects showcasing our impact.",
+    emptyLabel: "No case studies yet.",
+    searchLabel: "Search case studies",
+    searchPlaceholder: "Search case studies…",
+  },
+  page_blog: {
+    eyebrow: "Blog",
+    title: "Latest from the Blog",
+    subtitle:
+      "Practical strategy, policy analysis, and mobility market intelligence.",
+    emptyLabel: "No blog posts yet.",
+    searchLabel: "Search blog",
+    searchPlaceholder: "Search blog…",
+  },
+  page_contact: {
+    eyebrow: "Get in Touch",
+    title: "Let's talk about",
+    titleAccent: "your challenge.",
+    body: "Whether you're entering a new market, designing a procurement process, or need a strategic partner, let's talk about your challenge and how Movability can help.",
+    photoName: "Lars Christian Grødem-Olsen",
+    photoRole: "Founder & Managing Director, Movability",
+    labelName: "Name *",
+    placeholderName: "Your full name",
+    labelEmail: "Email *",
+    placeholderEmail: "you@company.com",
+    labelCompany: "Company",
+    placeholderCompany: "Your organisation",
+    labelCountry: "Country",
+    placeholderCountry: "e.g. Norway",
+    labelObjective: "Primary Objective",
+    placeholderObjective: "Select objective…",
+    labelOverview: "Brief Project Overview",
+    placeholderOverview:
+      "Describe your challenge, goals, or what you're looking to achieve…",
+    submitLabel: "Submit",
+    sendingLabel: "Sending…",
+    successTitle: "Message received",
+    successBody:
+      "Thank you for reaching out. We'll review your message and get back to you shortly.",
+    successLinkLabel: "Back to homepage",
+  },
 } satisfies Record<string, Section>;
 
 export type SectionKey = keyof typeof DEFAULT_SECTIONS;

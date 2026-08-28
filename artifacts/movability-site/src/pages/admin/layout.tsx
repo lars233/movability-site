@@ -9,7 +9,7 @@ interface AdminLayoutProps {
 }
 
 const NAV = [
-  { label: "Landing Page", href: "/admin/homepage", icon: "🏠" },
+  { label: "Page Text", href: "/admin/homepage", icon: "🏠" },
   { label: "Blog Posts", href: "/admin/blog", icon: "✍️" },
   { label: "Articles", href: "/admin/articles", icon: "📰" },
   { label: "Case Studies", href: "/admin/case-studies", icon: "📋" },

@@ -6,38 +6,27 @@ import { publicApi, toAbsoluteUrl, type PublicItem, type ListResponse } from "@/
 import { formatCategoryLabel } from "@/lib/category-format";
 import SiteNav from "@/components/site-nav";
 import SiteFooter from "@/components/site-footer";
+import { useHomepageContent } from "@/lib/site-content";
 
 const BLUE = "#4B5CF0";
 
 const CONFIG = {
   blog: {
-    eyebrow: "Blog",
-    title: "Latest from the Blog",
-    subtitle:
-      "Practical strategy, policy analysis, and mobility market intelligence.",
     basePath: "/blog",
     listFn: publicApi.listBlog,
-    emptyMessage: "No blog posts yet.",
+    sectionKey: "page_blog" as const,
     search: "hero" as const,
   },
   articles: {
-    eyebrow: "Articles",
-    title: "Mobility Expert Interviews",
-    subtitle:
-      "In-depth chats with operators, regulators and officials to help you understand how transport is evolving.",
     basePath: "/articles",
     listFn: publicApi.listArticles,
-    emptyMessage: "No articles yet.",
+    sectionKey: "page_articles" as const,
     search: "bottom" as const,
   },
   case_studies: {
-    eyebrow: "CASE STUDIES",
-    title: "How we've closed the gap before",
-    subtitle:
-      "Previous Movability projects showcasing our impact.",
     basePath: "/case-studies",
     listFn: publicApi.listCaseStudies,
-    emptyMessage: "No case studies yet.",
+    sectionKey: "page_case_studies" as const,
     search: "none" as const,
   },
 };
@@ -164,6 +153,9 @@ function Pagination({ page, pages, onPage }: { page: number; pages: number; onPa
 
 export default function ContentIndexPage({ type }: { type: "blog" | "articles" | "case_studies" }) {
   const cfg = CONFIG[type];
+  // Wording comes from the CMS ("Other pages" in the admin), falling back to
+  // the defaults shipped in the build.
+  const text = useHomepageContent().section(cfg.sectionKey);
   const [, navigate] = useLocation();
   const [search, setSearch] = useState("");
   const [inputValue, setInputValue] = useState("");
@@ -189,8 +181,8 @@ export default function ContentIndexPage({ type }: { type: "blog" | "articles" |
         type="text"
         value={inputValue}
         onChange={(e) => handleSearchInput(e.target.value)}
-        placeholder={`Search ${cfg.eyebrow.toLowerCase()}…`}
-        aria-label={`Search ${cfg.eyebrow.toLowerCase()}`}
+        placeholder={text.searchPlaceholder}
+        aria-label={text.searchLabel}
         className="w-full pl-11 pr-10 py-3.5 text-sm border border-black/[0.14] focus:outline-none focus:border-blue-500 transition-colors bg-white"
       />
       {inputValue && (
@@ -208,11 +200,11 @@ export default function ContentIndexPage({ type }: { type: "blog" | "articles" |
         <div className="max-w-7xl mx-auto px-6 pt-20 pb-16 border-b border-black/[0.07]">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
             <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-              className="text-xs font-semibold uppercase tracking-[0.22em] mb-4" style={{ color: BLUE }}>{cfg.eyebrow}</motion.p>
+              className="text-xs font-semibold uppercase tracking-[0.22em] mb-4" style={{ color: BLUE }}>{text.eyebrow}</motion.p>
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.06 }}
-              className="text-4xl md:text-6xl font-bold leading-tight mb-5 tracking-tight max-w-2xl">{cfg.title}</motion.h1>
+              className="text-4xl md:text-6xl font-bold leading-tight mb-5 tracking-tight max-w-2xl">{text.title}</motion.h1>
             <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.12 }}
-              className="text-base text-black/45 leading-relaxed mb-10 max-w-lg">{cfg.subtitle}</motion.p>
+              className="text-base text-black/45 leading-relaxed mb-10 max-w-lg">{text.subtitle}</motion.p>
             {cfg.search === "hero" && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.18 }} className="relative max-w-lg">
                 {searchField}
@@ -224,11 +216,11 @@ export default function ContentIndexPage({ type }: { type: "blog" | "articles" |
       {allCategories.length > 0 && (
         <section className="sticky top-[70px] z-30 bg-white/95 backdrop-blur border-b border-black/[0.07]"><div className="max-w-7xl mx-auto px-6 py-3"><div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-0.5"><button onClick={() => selectCategory("")} className="flex-shrink-0 text-xs font-medium px-3.5 py-1.5 rounded-full border transition-all" style={!category ? { background: BLUE, color: "white", borderColor: BLUE } : { borderColor: "rgba(0,0,0,0.15)", color: "rgba(0,0,0,0.55)" }}>All</button>{allCategories.map((cat) => (<button key={cat} onClick={() => selectCategory(category === cat ? "" : cat)} className="flex-shrink-0 text-xs font-medium px-3.5 py-1.5 rounded-full border transition-all whitespace-nowrap" style={category === cat ? { background: BLUE, color: "white", borderColor: BLUE } : { borderColor: "rgba(0,0,0,0.15)", color: "rgba(0,0,0,0.55)" }}>{formatCategoryLabel(cat)}</button>))}</div></div></section>
       )}
-      <section className="py-14 px-6"><div className="max-w-6xl mx-auto">{!loading && data && (<div className="mb-8 text-sm text-black/40">{data.total === 0 ? cfg.emptyMessage : <>{data.total} {data.total === 1 ? "result" : "results"}{search && <> {" "}for{" "}<span className="font-medium text-black/70">"{search}"</span></>}{category && <> {" "}in{" "}<span className="font-medium text-black/70">{formatCategoryLabel(category)}</span></>}</>}</div>)}{loading && (<div className="flex flex-col">{Array.from({ length: 3 }).map((_, i) => (<div key={i} className="grid md:grid-cols-2 gap-7 md:gap-14 py-10 md:py-14 border-t border-black/[0.08]"><div className="aspect-[16/10] bg-gray-50 animate-pulse" /><div className="flex flex-col gap-4 pt-2"><div className="h-3 w-24 bg-gray-50 animate-pulse" /><div className="h-7 w-4/5 bg-gray-50 animate-pulse" /><div className="h-4 w-full bg-gray-50 animate-pulse" /><div className="h-4 w-2/3 bg-gray-50 animate-pulse" /></div></div>))}</div>)}{error && (<div className="text-center py-20"><p className="text-red-500 text-sm mb-4">{error}</p><button onClick={() => void fetchData(search, category, page)} className="text-sm text-blue-600 hover:underline">Try again</button></div>)}{!loading && !error && data?.items.length === 0 && (<div className="text-center py-24"><p className="text-black/30 text-sm mb-4">No results found{search ? ` for "${search}"` : ""}{category ? ` in "${formatCategoryLabel(category)}"` : ""}</p>{(search || category) && (<button onClick={() => { clearSearch(); setCategory(""); }} className="text-sm text-blue-600 hover:underline">Clear filters</button>)}</div>)}{!loading && !error && data && data.items.length > 0 && (<><div className="border-b border-black/[0.08]">{data.items.map((item, i) => (<ContentRow key={item.id} item={item} basePath={cfg.basePath} index={i} />))}</div><Pagination page={data.page} pages={data.pages} onPage={(p) => setPage(p)} /></>)}</div></section>
+      <section className="py-14 px-6"><div className="max-w-6xl mx-auto">{!loading && data && (<div className="mb-8 text-sm text-black/40">{data.total === 0 ? text.emptyLabel : <>{data.total} {data.total === 1 ? "result" : "results"}{search && <> {" "}for{" "}<span className="font-medium text-black/70">"{search}"</span></>}{category && <> {" "}in{" "}<span className="font-medium text-black/70">{formatCategoryLabel(category)}</span></>}</>}</div>)}{loading && (<div className="flex flex-col">{Array.from({ length: 3 }).map((_, i) => (<div key={i} className="grid md:grid-cols-2 gap-7 md:gap-14 py-10 md:py-14 border-t border-black/[0.08]"><div className="aspect-[16/10] bg-gray-50 animate-pulse" /><div className="flex flex-col gap-4 pt-2"><div className="h-3 w-24 bg-gray-50 animate-pulse" /><div className="h-7 w-4/5 bg-gray-50 animate-pulse" /><div className="h-4 w-full bg-gray-50 animate-pulse" /><div className="h-4 w-2/3 bg-gray-50 animate-pulse" /></div></div>))}</div>)}{error && (<div className="text-center py-20"><p className="text-red-500 text-sm mb-4">{error}</p><button onClick={() => void fetchData(search, category, page)} className="text-sm text-blue-600 hover:underline">Try again</button></div>)}{!loading && !error && data?.items.length === 0 && (<div className="text-center py-24"><p className="text-black/30 text-sm mb-4">No results found{search ? ` for "${search}"` : ""}{category ? ` in "${formatCategoryLabel(category)}"` : ""}</p>{(search || category) && (<button onClick={() => { clearSearch(); setCategory(""); }} className="text-sm text-blue-600 hover:underline">Clear filters</button>)}</div>)}{!loading && !error && data && data.items.length > 0 && (<><div className="border-b border-black/[0.08]">{data.items.map((item, i) => (<ContentRow key={item.id} item={item} basePath={cfg.basePath} index={i} />))}</div><Pagination page={data.page} pages={data.pages} onPage={(p) => setPage(p)} /></>)}</div></section>
       {cfg.search === "bottom" && (
         <section className="px-6 pb-20">
           <div className="max-w-6xl mx-auto border-t border-black/[0.08] pt-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black/35 mb-4">Search {cfg.eyebrow.toLowerCase()}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black/35 mb-4">{text.searchLabel}</p>
             <div className="relative max-w-lg">{searchField}</div>
           </div>
         </section>

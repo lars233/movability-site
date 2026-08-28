@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import SiteNav from "@/components/site-nav";
 import SiteFooter from "@/components/site-footer";
+import { useHomepageContent } from "@/lib/site-content";
 import larsPhoto from "@assets/Lars_photo_1778244138811.webp";
 
 const BLUE = "#4B5CF0";
@@ -57,6 +58,10 @@ export default function ContactPage() {
     }
   }
 
+  // Wording comes from the CMS ("Contact page" in the admin), falling back to
+  // the defaults shipped in the build.
+  const text = useHomepageContent().section("page_contact");
+
   const inputClass =
     "w-full h-12 px-4 text-sm border border-black/15 bg-white placeholder:text-black/35 focus:outline-none focus:border-black/50 transition-colors";
   const selectClass =
@@ -72,16 +77,16 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-6 pt-20 pb-16">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] mb-4" style={{ color: BLUE }}>
-              Get in Touch
+              {text.eyebrow}
             </p>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight tracking-tight mb-5 max-w-2xl">
-              Let's talk about{" "}
+              {text.title}{" "}
               <span style={{ backgroundImage: `linear-gradient(135deg, ${BLUE}, #6366F1)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                your challenge.
+                {text.titleAccent}
               </span>
             </h1>
             <p className="text-base text-black/45 max-w-lg leading-relaxed">
-              Whether you're entering a new market, designing a procurement process, or need a strategic partner, let's talk about your challenge and how Movability can help.
+              {text.body}
             </p>
           </motion.div>
         </div>
@@ -103,8 +108,8 @@ export default function ContactPage() {
                 />
               </div>
               <div className="mt-6">
-                <p className="text-sm font-bold text-black">Lars Christian Grødem-Olsen</p>
-                <p className="text-xs text-black/45 mt-1">Founder & Managing Director, Movability</p>
+                <p className="text-sm font-bold text-black">{text.photoName}</p>
+                <p className="text-xs text-black/45 mt-1">{text.photoRole}</p>
               </div>
             </div>
 
@@ -117,15 +122,15 @@ export default function ContactPage() {
                   className="text-center py-20"
                 >
                   <CheckCircle size={48} className="mx-auto mb-6" style={{ color: BLUE }} />
-                  <h2 className="text-2xl font-bold mb-3">Message received</h2>
+                  <h2 className="text-2xl font-bold mb-3">{text.successTitle}</h2>
                   <p className="text-black/50 max-w-sm mx-auto leading-relaxed">
-                    Thank you for reaching out. We'll review your message and get back to you shortly.
+                    {text.successBody}
                   </p>
                   <a
                     href="/"
                     className="inline-flex items-center gap-2 mt-8 text-sm font-semibold text-black/50 hover:text-black transition-colors"
                   >
-                    Back to homepage <ArrowRight size={14} />
+                    {text.successLinkLabel} <ArrowRight size={14} />
                   </a>
                 </motion.div>
               ) : (
@@ -138,22 +143,22 @@ export default function ContactPage() {
                 >
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
-                      <label className={labelClass}>Name *</label>
+                      <label className={labelClass}>{text.labelName}</label>
                       <input
                         type="text"
                         required
-                        placeholder="Your full name"
+                        placeholder={text.placeholderName}
                         value={form.name}
                         onChange={(e) => set("name", e.target.value)}
                         className={inputClass}
                       />
                     </div>
                     <div>
-                      <label className={labelClass}>Email *</label>
+                      <label className={labelClass}>{text.labelEmail}</label>
                       <input
                         type="email"
                         required
-                        placeholder="you@company.com"
+                        placeholder={text.placeholderEmail}
                         value={form.email}
                         onChange={(e) => set("email", e.target.value)}
                         className={inputClass}
@@ -163,20 +168,20 @@ export default function ContactPage() {
 
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
-                      <label className={labelClass}>Company</label>
+                      <label className={labelClass}>{text.labelCompany}</label>
                       <input
                         type="text"
-                        placeholder="Your organisation"
+                        placeholder={text.placeholderCompany}
                         value={form.company}
                         onChange={(e) => set("company", e.target.value)}
                         className={inputClass}
                       />
                     </div>
                     <div>
-                      <label className={labelClass}>Country</label>
+                      <label className={labelClass}>{text.labelCountry}</label>
                       <input
                         type="text"
-                        placeholder="e.g. Norway"
+                        placeholder={text.placeholderCountry}
                         value={form.country}
                         onChange={(e) => set("country", e.target.value)}
                         className={inputClass}
@@ -185,14 +190,14 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className={labelClass}>Primary Objective</label>
+                    <label className={labelClass}>{text.labelObjective}</label>
                     <div className="relative">
                       <select
                         value={form.primary_objective}
                         onChange={(e) => set("primary_objective", e.target.value)}
                         className={selectClass}
                       >
-                        <option value="">Select objective…</option>
+                        <option value="">{text.placeholderObjective}</option>
                         {OBJECTIVES.map((opt) => (
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
@@ -204,10 +209,10 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className={labelClass}>Brief Project Overview</label>
+                    <label className={labelClass}>{text.labelOverview}</label>
                     <textarea
                       rows={5}
-                      placeholder="Describe your challenge, goals, or what you're looking to achieve…"
+                      placeholder={text.placeholderOverview}
                       value={form.project_overview}
                       onChange={(e) => set("project_overview", e.target.value)}
                       className="w-full px-4 py-3 text-sm border border-black/15 bg-white placeholder:text-black/35 focus:outline-none focus:border-black/50 transition-colors resize-none"
@@ -224,7 +229,7 @@ export default function ContactPage() {
                     className="w-full h-13 px-6 py-3.5 text-sm font-semibold text-white flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-60"
                     style={{ background: `linear-gradient(135deg, ${BLUE}, #6366F1)` }}
                   >
-                    {submitting ? "Sending…" : <>Submit <ArrowRight size={15} /></>}
+                    {submitting ? text.sendingLabel : <>{text.submitLabel} <ArrowRight size={15} /></>}
                   </button>
                 </motion.form>
               )}
